@@ -12,7 +12,6 @@ x-base: &base
     - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
     - "/etc/hosts:/etc/hosts"
     - "/home/elandini/.gitconfig:/home/user1/.gitconfig"
-    - ".bashrc_local:/home/user1/.bashrc_local"
 #    - "/home/elandini/.config/yarp:/home/user1/.config/yarp:rw"
 #    - "/home/elandini/.local/share/yarp:/home/user1/.local/share/yarp:rw"
     - "/home/elandini/mainSrc/GIT/robotology-playground/yarp-ros2:/home/user1/robotology/yarp-ros2:rw"
@@ -64,4 +63,3 @@ services:
     <<: *base
     container_name: terminatorMoveit
     command: terminator -g /home/user1/.config/terminator/config
-

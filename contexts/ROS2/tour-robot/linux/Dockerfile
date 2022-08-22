@@ -61,6 +61,7 @@ RUN mkdir -p /home/user1/ws_gazebo-ros2-control/src && cd ws_gazebo-ros2-control
     /bin/bash -c "source /opt/ros/humble/setup.bash; source /home/user1/ros2_control_ws/install/setup.bash; colcon build" && \
     echo "source ~/ws_gazebo-ros2-control/install/setup.bash" >> ~/.bashrc
 
+## MoveIt2 related stuff. Really heavy, build it only if needed ---------------------------------------------------------------------------------- ##
 FROM ros2CtrlDefault as moveit2
 
 RUN sudo apt-get update && sudo apt-get install -y ros-humble-moveit*
@@ -68,8 +69,6 @@ RUN sudo apt-get update && sudo apt-get install -y ros-humble-moveit*
 RUN sudo apt-get install -y python3-colcon-common-extensions python3-colcon-mixin && \
      /bin/bash -c "source /opt/ros/humble/setup.bash; colcon mixin add default https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml" && \
      /bin/bash -c "source /opt/ros/humble/setup.bash; colcon mixin update default"
-
-RUN echo "giubilio"
 
 RUN mkdir -p /home/user1/ws_moveit2/src && cd ws_moveit2/src && \
     git clone https://github.com/ros-planning/moveit2_tutorials -b main && \
