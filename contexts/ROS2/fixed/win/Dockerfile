@@ -1,11 +1,11 @@
 #FROM randaz81/r1slam:ros2
 FROM randaz81/r1slam:ros2galactic
 #ADD key for ros
-RUN sudo apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
-RUN sudo apt update
+#RUN sudo apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
+RUN sudo apt update -qq
 RUN sudo apt install python3-pip gedit geany telnet ipython3 -y
 RUN sed -i '$ d' .bashrc
-RUN printf "\nalias ros2st=\"source /opt/ros/foxy/setup.bash && . /home/user1/yarp-ros2/ros2_interfaces_ws/install/setup.bash\"\n# Other stuff ---------------------------------------------------- START #\n\nparse_git_branch() {\n     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\\\1)/'\n}\n#export PS1=\"\[\\\e[32m\]\u@\h \[\\\e[32m\]\w \[\\\e[91m\]\\\$(parse_git_branch)\[\\\e[00m\]$ \"\nexport PS1=\"\[\\\033[01;32m\]\u\[\\\033[00m\]:\[\\\033[01;34m\]\W \[\\\e[91m\]\\\$(parse_git_branch)\[\\\e[00m\]$ \"\n# Other stuff ------------------------------------------------------ END #\n" >> /home/user1/.bashrc
+RUN printf "\nalias ros2st=\"source /opt/ros/galactic/setup.bash && . /home/user1/yarp-ros2/ros2_interfaces_ws/install/setup.bash\"\n# Other stuff ---------------------------------------------------- START #\n\nparse_git_branch() {\n     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\\\1)/'\n}\n#export PS1=\"\[\\\e[32m\]\u@\h \[\\\e[32m\]\w \[\\\e[91m\]\\\$(parse_git_branch)\[\\\e[00m\]$ \"\nexport PS1=\"\[\\\033[01;32m\]\u\[\\\033[00m\]:\[\\\033[01;34m\]\W \[\\\e[91m\]\\\$(parse_git_branch)\[\\\e[00m\]$ \"\n# Other stuff ------------------------------------------------------ END #\n" >> /home/user1/.bashrc
 RUN git clone https://github.com/aws-robotics/ros2-launch-file-migrator.git
 RUN cd ros2-launch-file-migrator && pip3 install -e ./ --user && sudo python3 setup.py install
 RUN sudo apt install rsync

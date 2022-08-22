@@ -47,9 +47,9 @@ services:
     volumes:
       - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
       - "${XAUTHORITY}/:/home/user1/.Xauthority:rw"
-      - "C:/ExchangeData:/home/user1/ex_data_mount"
-      - "C:/Projects/Stuff:/home/user1/ex_stuff"
-      - "C:/Projects/GIT/:/home/user1/mntCode"
+      - "/home/elandini/mainDump:/home/user1/ex_data_mount"
+      - "/home/elandini/mainScript:/home/user1/ex_stuff"
+      - "/home/elandini/mainSrc:/home/user1/mntCode"
     command: sh -c "yarp detect --write && yarp run --server /console --log"
     network_mode: host
     ipc: host
