@@ -15,7 +15,9 @@ x-base: &base
 #    - "/home/elandini/.config/yarp:/home/user1/.config/yarp:rw"
 #    - "/home/elandini/.local/share/yarp:/home/user1/.local/share/yarp:rw"
     - "/home/elandini/mainSrc/GIT/robotology-playground/yarp-ros2:/home/user1/robotology/yarp-ros2:rw"
-    - "/home/elandini/mainSrc/GIT/robotology/gazebo-yarp-plugins:/home/user1/robotology/gazebo-yarp-plugins:rw"
+    - "/home/elandini/mainSrc/GIT/robotology/cer-sim:/home/user1/robotology/cer-sim:rw"
+    - "/home/elandini/mainSrc/tests/fromDocker/moveit2-image/ws_ros2_tutorials:/home/user1/ws_ros2_tutorials:rw"
+#    - "/home/elandini/mainSrc/GIT/robotology/gazebo-yarp-plugins:/home/user1/robotology/gazebo-yarp-plugins:rw"
     - "/home/elandini/mainSrc/GIT/hsp/tour-guide-robot/app/navigation2/conf/cyclone_dds_settings.xml:/home/user1/tour-guide-robot/app/navigation2/conf/cyclone_dds_settings.xml:rw"
   network_mode: host
   ipc: host
@@ -44,6 +46,10 @@ services:
       dockerfile: Dockerfile
       target: moveit2
       context: .
+      args:
+          username: user1
+          uid: 1000
+          gid: 1000
 
 
   terminatorCtrl:
