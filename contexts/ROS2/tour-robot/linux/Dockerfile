@@ -29,7 +29,7 @@ RUN groupmod -g $gid $username && \
 USER user1
 WORKDIR /home/user1
 
-RUN sudo apt-get update && sudo apt-get install -y nautilus ros-humble-rviz*
+RUN sudo apt-get update && sudo apt-get install -y nautilus python3-ipython ipython3 ros-humble-rviz*
 
 RUN cd tour-guide-robot && git checkout ros2 && \
     git fetch origin && git pull origin ros2 && cd build && \
@@ -57,9 +57,14 @@ RUN mkdir /home/user1/ros2_control_ws && cd ros2_control_ws && mkdir src && \
     /bin/bash -c "source /opt/ros/humble/setup.bash; rosdep install --from-paths src --ignore-src -r -y && colcon build --symlink-install" && \
     echo "source /home/user1/ros2_control_ws/install/setup.bash" >> /home/user1/.bashrc
 RUN mkdir -p /home/user1/ws_gazebo-ros2-control/src && cd ws_gazebo-ros2-control/src && \
-    git clone https://github.com/ros-controls/gazebo_ros2_control.git && cd ..\
-    /bin/bash -c "source /opt/ros/humble/setup.bash; source /home/user1/ros2_control_ws/install/setup.bash; colcon build" && \
+    git clone https://github.com/ros-controls/gazebo_ros2_control.git
+RUN cd /home/user1/ws_gazebo-ros2-control && /bin/bash -c "source /opt/ros/humble/setup.bash; source /home/user1/ros2_control_ws/install/setup.bash; colcon build" && \
     echo "source ~/ws_gazebo-ros2-control/install/setup.bash" >> ~/.bashrc
+
+# ROS2 launch file migrator
+RUN git clone https://github.com/aws-robotics/ros2-launch-file-migrator && \
+    cd ros2-launch-file-migrator && pip3 install -e ./ --user
+ENV PATH=$PATH:/home/user1/.local/bin
 
 ## MoveIt2 related stuff. Really heavy, build it only if needed ---------------------------------------------------------------------------------- ##
 FROM ros2CtrlDefault as moveit2
