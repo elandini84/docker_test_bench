@@ -1,0 +1,37 @@
+version: "3.7"
+
+x-base: &base
+  environment:
+    - DISPLAY=${DISPLAY}
+    - XAUTHORITY=/root/.Xauthority
+    - QT_X11_NO_MITSHM=1
+    - DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user1/1000/bus
+    - LIBGL_ALWAYS_INDIRECT=0
+    - YARP_COLORED_OUTPUT=1
+  volumes:
+    - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
+    - "/home/elandini/.config/yarp:/root/.config/yarp"
+    - "/home/elandini/mainData/etapas-results/motion-analysis:/root/.local/share/yarp/contexts/motionAnalyzer" #for saving the results from motionAnalyzer
+    - "/home/elandini/mainData/etapas-results/events:/root/.local/share/yarp/contexts/eventCollector" #for saving the results from eventCollector
+  network_mode: host
+  ipc: host
+  pid: host
+  privileged: true
+  security_opt:
+    - apparmor:unconfined
+
+
+services:
+
+# Images
+  assistive-rehab-basic-image:
+    image: hsp/assistive-rehab-test:basic
+    build:
+      dockerfile: Dockerfile
+      context: .
+
+  terminatorEtapasBasic:
+    image: hsp/assistive-rehab-test:basic
+    <<: *base
+    container_name: terminatorEtapasBasic
+    command: terminator
