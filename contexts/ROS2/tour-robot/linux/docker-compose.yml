@@ -12,13 +12,8 @@ x-base: &base
     - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
     - "/etc/hosts:/etc/hosts"
     - "/home/elandini/.gitconfig:/home/user1/.gitconfig"
-#    - "/home/elandini/.config/yarp:/home/user1/.config/yarp:rw"
-#    - "/home/elandini/.local/share/yarp:/home/user1/.local/share/yarp:rw"
-    - "/home/elandini/mainSrc/GIT/robotology-playground/yarp-ros2:/home/user1/robotology/yarp-ros2:rw"
-    - "/home/elandini/mainSrc/GIT/robotology/cer-sim:/home/user1/robotology/cer-sim:rw"
-    - "/home/elandini/mainSrc/tests/fromDocker/moveit2-image/ws_ros2_tutorials:/home/user1/ws_ros2_tutorials:rw"
-#    - "/home/elandini/mainSrc/GIT/robotology/gazebo-yarp-plugins:/home/user1/robotology/gazebo-yarp-plugins:rw"
-    - "/home/elandini/mainSrc/GIT/hsp/tour-guide-robot/app/navigation2/conf/cyclone_dds_settings.xml:/home/user1/tour-guide-robot/app/navigation2/conf/cyclone_dds_settings.xml:rw"
+    #- "/home/elandini/.config/yarp:/home/user1/.config/yarp:rw"
+
   network_mode: host
   ipc: host
   pid: host
@@ -29,43 +24,8 @@ x-base: &base
 
 services:
 
-# Images
-  ros2-control-image:
-    image: hsp/ros2-bench-test:ros2Ctrl
-    build:
-      dockerfile: Dockerfile
-      target: ros2CtrlDefault
-      context: .
-      args:
-          username: user1
-          uid: 1000
-          gid: 1000
-  moveit2-image:
-    image: hsp/ros2-bench-test:moveit2
-    build:
-      dockerfile: Dockerfile
-      target: moveit2
-      context: .
-      args:
-          username: user1
-          uid: 1000
-          gid: 1000
-
-
-  terminatorCtrl:
-    image: hsp/ros2-bench-test:ros2Ctrl
-    <<: *base
-    container_name: terminatorCtrl
-    command: terminator -g /home/user1/.config/terminator/config
-
   terminatorBase:
-    image: konkarapas/r1images:r1Sim2
+    image: elandini84/r1images:r1Sim2
     <<: *base
     container_name: terminatorBase
-    command: terminator -g /home/user1/.config/terminator/config
-
-  terminatorMoveit:
-    image: hsp/ros2-bench-test:moveit2
-    <<: *base
-    container_name: terminatorMoveit
     command: terminator -g /home/user1/.config/terminator/config
