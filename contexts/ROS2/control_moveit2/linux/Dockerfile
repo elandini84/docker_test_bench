@@ -49,12 +49,18 @@ RUN cd yarp-devices-ros2/ && git remote add elandini84 https://github.com/elandi
 
 WORKDIR /home/user1
 
+RUN mkdir /home/user1/ws_rosdep_broken && cd ws_rosdep_broken && \
+    git clone https://github.com/ros-controls/kinematics_interface && \
+    cd kinematics_interface && /bin/bash -c "source /opt/ros/humble/setup.bash; colcon build --packages-select kinematics_interface" && \
+    echo "source /home/user1/ws_rosdep_broken/kinematics_interface/install/setup.bash" >> /home/user1/.bashrc
+
 RUN mkdir /home/user1/ros2_control_ws && cd ros2_control_ws && mkdir src && \
     cd src && git clone https://github.com/ros-controls/ros2_control && \
     git clone https://github.com/ros-controls/ros2_controllers && \
+    cd ros2_controllers && git checkout 34da157213e64dbccbc32f3d478519371dbac54c && cd .. && \
     git clone https://github.com/ros-controls/ros2_control_demos && \
     git clone https://github.com/ros2/ros_testing && cd .. && \
-    /bin/bash -c "source /opt/ros/humble/setup.bash; rosdep install --from-paths src --ignore-src -r -y && colcon build --symlink-install" && \
+    /bin/bash -c "source /opt/ros/humble/setup.bash; source /home/user1/ws_rosdep_broken/kinematics_interface/install/setup.bash; rosdep install --from-paths src --ignore-src -r -y && colcon build --symlink-install" && \
     echo "source /home/user1/ros2_control_ws/install/setup.bash" >> /home/user1/.bashrc
 RUN mkdir -p /home/user1/ws_gazebo-ros2-control/src && cd ws_gazebo-ros2-control/src && \
     git clone https://github.com/ros-controls/gazebo_ros2_control.git

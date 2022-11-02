@@ -11,14 +11,14 @@ x-base: &base
   volumes:
     - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
     - "/etc/hosts:/etc/hosts"
-    - "/home/elandini/.gitconfig:/home/user1/.gitconfig"
-#    - "/home/elandini/.config/yarp:/home/user1/.config/yarp:rw"
-#    - "/home/elandini/.local/share/yarp:/home/user1/.local/share/yarp:rw"
-    - "/home/elandini/mainSrc/GIT/robotology-playground/yarp-devices-ros2:/home/user1/robotology/yarp-devices-ros2:rw"
-    - "/home/elandini/mainSrc/GIT/robotology/cer-sim:/home/user1/robotology/cer-sim:rw"
-    - "/home/elandini/mainSrc/tests/fromDocker/moveit2-image/ws_ros2_tutorials:/home/user1/ws_ros2_tutorials:rw"
-#    - "/home/elandini/mainSrc/GIT/robotology/gazebo-yarp-plugins:/home/user1/robotology/gazebo-yarp-plugins:rw"
-    - "/home/elandini/mainSrc/GIT/hsp/tour-guide-robot/app/navigation2/conf/cyclone_dds_settings.xml:/home/user1/tour-guide-robot/app/navigation2/conf/cyclone_dds_settings.xml:rw"
+    - "${HOME}/.gitconfig:/home/user1/.gitconfig"
+#    - "${HOME}/.config/yarp:/home/user1/.config/yarp:rw"
+#    - "${HOME}/.local/share/yarp:/home/user1/.local/share/yarp:rw"
+    - "${PLAY_CODE}/yarp-devices-ros2:/home/user1/robotology/yarp-devices-ros2:rw"
+    - "${ROBOT_CODE}/cer-sim:/home/user1/robotology/cer-sim:rw"
+    - "${HOME}/mainSrc/tests/fromDocker/moveit2-image/ws_ros2_tutorials:/home/user1/ws_ros2_tutorials:rw"
+#    - "${HOME}/mainSrc/GIT/robotology/gazebo-yarp-plugins:/home/user1/robotology/gazebo-yarp-plugins:rw"
+    - "${HSP_CODE}/tour-guide-robot/app/navigation2/conf/cyclone_dds_settings.xml:/home/user1/tour-guide-robot/app/navigation2/conf/cyclone_dds_settings.xml:rw"
   network_mode: host
   ipc: host
   pid: host
@@ -31,7 +31,7 @@ services:
 
 # Images
   ros2-control-image:
-    image: hsp/ros2-bench-test:ros2Ctrl
+    image: elandini84/ros2-bench-test:ros2Ctrl
     build:
       dockerfile: Dockerfile
       target: ros2CtrlDefault
@@ -41,7 +41,7 @@ services:
           uid: 1000
           gid: 1000
   moveit2-image:
-    image: hsp/ros2-bench-test:moveit2
+    image: elandini84/ros2-bench-test:moveit2
     build:
       dockerfile: Dockerfile
       target: moveit2
@@ -53,7 +53,7 @@ services:
 
 
   terminatorCtrl:
-    image: hsp/ros2-bench-test:ros2Ctrl
+    image: elandini84/ros2-bench-test:ros2Ctrl
     <<: *base
     container_name: terminatorCtrl
     command: terminator -g /home/user1/.config/terminator/config
@@ -65,7 +65,7 @@ services:
     command: terminator -g /home/user1/.config/terminator/config
 
   terminatorMoveit:
-    image: hsp/ros2-bench-test:moveit2
+    image: elandini84/ros2-bench-test:moveit2
     <<: *base
     container_name: terminatorMoveit
     command: terminator -g /home/user1/.config/terminator/config
