@@ -47,6 +47,9 @@ RUN echo "source /opt/ros/humble/setup.bash" >> /home/user1/.bashrc
 RUN cd yarp-devices-ros2/ && git remote add elandini84 https://github.com/elandini84/yarp-devices-ros2.git && \
      git fetch elandini84
 
+RUN cd navigation/ && git remote add elandini84 https://github.com/elandini84/navigation.git && \
+     git fetch elandini84
+
 WORKDIR /home/user1
 
 RUN mkdir /home/user1/ws_rosdep_broken && cd ws_rosdep_broken && \

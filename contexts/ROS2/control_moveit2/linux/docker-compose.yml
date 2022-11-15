@@ -18,7 +18,8 @@ x-base: &base
     - "${ROBOT_CODE}/cer-sim:/home/user1/robotology/cer-sim:rw"
     - "${HOME}/mainSrc/tests/fromDocker/moveit2-image/ws_ros2_tutorials:/home/user1/ws_ros2_tutorials:rw"
 #    - "${HOME}/mainSrc/GIT/robotology/gazebo-yarp-plugins:/home/user1/robotology/gazebo-yarp-plugins:rw"
-    - "${HSP_CODE}/tour-guide-robot/app/navigation2/conf/cyclone_dds_settings.xml:/home/user1/tour-guide-robot/app/navigation2/conf/cyclone_dds_settings.xml:rw"
+    - "${HOME}/mainSrc/GIT/robotology/robots-configuration:/home/user1/robotology/robots-configuration:rw"
+    - "${HSP_CODE}/tour-guide-robot:/home/user1/tour-guide-robot:rw"
   network_mode: host
   ipc: host
   pid: host
