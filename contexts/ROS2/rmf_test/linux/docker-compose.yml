@@ -1,0 +1,54 @@
+version: "3.7"
+
+x-base: &base
+  environment:
+    - DISPLAY=${DISPLAY}
+    - XAUTHORITY=/home/user1/.Xauthority
+    - QT_X11_NO_MITSHM=1
+    - DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user1/1000/bus
+    - LIBGL_ALWAYS_INDIRECT=0
+    - YARP_COLORED_OUTPUT=1
+  volumes:
+    - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
+    - "/etc/hosts:/etc/hosts"
+    - "${HOME}/.gitconfig:/home/user1/.gitconfig"
+    - "${HSP_CODE}/tour-guide-robot/app/navigation2/conf/cyclone_dds_settings.xml:/home/user1/tour-guide-robot/app/navigation2/conf/cyclone_dds_settings.xml:rw"
+  network_mode: host
+  ipc: host
+  pid: host
+  privileged: true
+  security_opt:
+    - apparmor:unconfined
+
+
+services:
+
+# Images
+  rmf-image:
+    image: elandini84/rmf-bench-test
+    build:
+      dockerfile: Dockerfile
+      context: .
+      args:
+          username: user1
+          uid: 1000
+          gid: 1000
+
+
+  terminatorCtrl:
+    image: elandini84/ros2-bench-test:ros2Ctrl
+    <<: *base
+    container_name: terminatorCtrl
+    command: terminator -g /home/user1/.config/terminator/config
+
+  terminatorBase:
+    image: elandini84/r1images:r1Sim2
+    <<: *base
+    container_name: terminatorBase
+    command: terminator -g /home/user1/.config/terminator/config
+
+  terminatorMoveit:
+    image: elandini84/ros2-bench-test:moveit2
+    <<: *base
+    container_name: terminatorMoveit
+    command: terminator -g /home/user1/.config/terminator/config
