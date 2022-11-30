@@ -24,8 +24,14 @@ x-base: &base
 
 services:
 
-  terminatorBase:
+  terminatorSim:
     image: elandini84/r1images:r1Sim2
     <<: *base
-    container_name: terminatorBase
+    container_name: terminatorSim
+    command: terminator -g /home/user1/.config/terminator/config
+
+  terminatorStable:
+    image: elandini84/r1images:tourCore2_noNvidia
+    <<: *base
+    container_name: terminatorStable
     command: terminator -g /home/user1/.config/terminator/config
