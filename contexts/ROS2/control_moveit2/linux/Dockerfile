@@ -1,4 +1,4 @@
-FROM elandini84/r1images:r1Sim2 as ros2CtrlDefault
+FROM elandini84/r1images:r1Sim2 as ros2LandoDefault
 
 LABEL maintainer="Ettore Landini"
 
@@ -52,31 +52,49 @@ RUN cd navigation/ && git remote add elandini84 https://github.com/elandini84/na
 
 WORKDIR /home/user1
 
-RUN mkdir /home/user1/ws_rosdep_broken && cd ws_rosdep_broken && \
-    git clone https://github.com/ros-controls/kinematics_interface && \
-    cd kinematics_interface && /bin/bash -c "source /opt/ros/humble/setup.bash; colcon build --packages-select kinematics_interface" && \
-    echo "source /home/user1/ws_rosdep_broken/kinematics_interface/install/setup.bash" >> /home/user1/.bashrc
-
-RUN mkdir /home/user1/ros2_control_ws && cd ros2_control_ws && mkdir src && \
-    cd src && git clone https://github.com/ros-controls/ros2_control && \
-    git clone https://github.com/ros-controls/ros2_controllers && \
-    cd ros2_controllers && git checkout 34da157213e64dbccbc32f3d478519371dbac54c && cd .. && \
-    git clone https://github.com/ros-controls/ros2_control_demos && \
-    git clone https://github.com/ros2/ros_testing && cd .. && \
-    /bin/bash -c "source /opt/ros/humble/setup.bash; source /home/user1/ws_rosdep_broken/kinematics_interface/install/setup.bash; rosdep install --from-paths src --ignore-src -r -y && colcon build --symlink-install" && \
-    echo "source /home/user1/ros2_control_ws/install/setup.bash" >> /home/user1/.bashrc
-RUN mkdir -p /home/user1/ws_gazebo-ros2-control/src && cd ws_gazebo-ros2-control/src && \
-    git clone https://github.com/ros-controls/gazebo_ros2_control.git
-RUN cd /home/user1/ws_gazebo-ros2-control && /bin/bash -c "source /opt/ros/humble/setup.bash; source /home/user1/ros2_control_ws/install/setup.bash; colcon build" && \
-    echo "source ~/ws_gazebo-ros2-control/install/setup.bash" >> ~/.bashrc
 
 # ROS2 launch file migrator
 RUN git clone https://github.com/aws-robotics/ros2-launch-file-migrator && \
     cd ros2-launch-file-migrator && pip3 install -e ./ --user
 ENV PATH=$PATH:/home/user1/.local/bin
 
+# ros2_control from apt
+FROM ros2LandoDefault AS ros2CtrlApt
+RUN sudo apt-get update && sudo apt-get install -y ros-humble-control* ros-humble-ros2-control ros-humble-ros2-controllers
+
+# moveit2 from apt only
+FROM ros2CtrlApt AS moveIt2Apt
+RUN sudo apt-get update && sudo apt-get install -y ros-humble-moveit*
+
+RUN sudo apt-get install -y python3-colcon-common-extensions python3-colcon-mixin && \
+     /bin/bash -c "source /opt/ros/humble/setup.bash; colcon mixin add default https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml" && \
+     /bin/bash -c "source /opt/ros/humble/setup.bash; colcon mixin update default"
+
+# ros2_control from source
+FROM ros2LandoDefault AS ros2CtrlDefault
+
+RUN mkdir /home/user1/ws_rosdep_broken && cd ws_rosdep_broken && \
+    git clone https://github.com/ros-controls/kinematics_interface && \
+    cd kinematics_interface && /bin/bash -c "source /opt/ros/humble/setup.bash; colcon build --packages-select kinematics_interface" && \
+    echo "source /home/user1/ws_rosdep_broken/kinematics_interface/install/setup.bash" >> /home/user1/.bashrc
+RUN sudo apt-get update && sudo apt-get install -y ros-humble-realtime-tools
+RUN mkdir /home/user1/ros2_control_ws && cd ros2_control_ws && mkdir src && \
+    cd src && git clone https://github.com/ros-controls/ros2_control && \
+    cd ros2_control && git fetch --all --tags && git checkout tags/3.3.0 -b v3.3.0-branch && \
+    cd .. && git clone https://github.com/ros-controls/ros2_controllers && \
+    #cd ros2_controllers && git fetch --all --tags && git checkout tags/2.3.0 -b v2.3.0-branch && cd .. && \
+    cd ros2_controllers && git checkout 34da157213e64dbccbc32f3d478519371dbac54c && cd .. && \
+    git clone https://github.com/ros-controls/ros2_control_demos && \
+    git clone https://github.com/ros2/ros_testing
+RUN cd /home/user1/ros2_control_ws && /bin/bash -c "source /opt/ros/humble/setup.bash; source /home/user1/ws_rosdep_broken/kinematics_interface/install/setup.bash; rosdep install --from-paths src --ignore-src -r -y && colcon build --symlink-install" && \
+    echo "source /home/user1/ros2_control_ws/install/setup.bash" >> /home/user1/.bashrc
+RUN mkdir -p /home/user1/ws_gazebo-ros2-control/src && cd ws_gazebo-ros2-control/src && \
+    git clone https://github.com/ros-controls/gazebo_ros2_control.git
+RUN cd /home/user1/ws_gazebo-ros2-control && /bin/bash -c "source /opt/ros/humble/setup.bash; source /home/user1/ros2_control_ws/install/setup.bash; colcon build" && \
+    echo "source ~/ws_gazebo-ros2-control/install/setup.bash" >> ~/.bashrc
+
 ## MoveIt2 related stuff. Really heavy, build it only if needed ---------------------------------------------------------------------------------- ##
-FROM ros2CtrlDefault as moveit2
+FROM ros2CtrlDefault AS moveit2
 
 RUN sudo apt-get update && sudo apt-get install -y ros-humble-moveit*
 
