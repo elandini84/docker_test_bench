@@ -1,4 +1,4 @@
-FROM elandini84/r1images:r1Sim2 as ros2LandoDefault
+FROM elandini84/r1images:r1Sim2 as ros2_lando_default
 
 LABEL maintainer="Ettore Landini"
 
@@ -52,26 +52,28 @@ RUN cd navigation/ && git remote add elandini84 https://github.com/elandini84/na
 
 WORKDIR /home/user1
 
-
 # ROS2 launch file migrator
 RUN git clone https://github.com/aws-robotics/ros2-launch-file-migrator && \
     cd ros2-launch-file-migrator && pip3 install -e ./ --user
 ENV PATH=$PATH:/home/user1/.local/bin
 
-# ros2_control from apt
-FROM ros2LandoDefault AS ros2CtrlApt
+
+# ros2_control from apt ################################################################################################################################## BUILD TARGET START ####
+FROM ros2_lando_default AS ros2_ctrl_apt
 RUN sudo apt-get update && sudo apt-get install -y ros-humble-control* ros-humble-ros2-control ros-humble-ros2-controllers
 
-# moveit2 from apt only
-FROM ros2CtrlApt AS moveIt2Apt
+
+# moveit2 from apt only ################################################################################################################################## BUILD TARGET START ####
+FROM ros2_ctrl_apt AS moveit2_apt
 RUN sudo apt-get update && sudo apt-get install -y ros-humble-moveit*
 
 RUN sudo apt-get install -y python3-colcon-common-extensions python3-colcon-mixin && \
      /bin/bash -c "source /opt/ros/humble/setup.bash; colcon mixin add default https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml" && \
      /bin/bash -c "source /opt/ros/humble/setup.bash; colcon mixin update default"
 
-# ros2_control from source
-FROM ros2LandoDefault AS ros2CtrlDefault
+
+# ros2_control from source ############################################################################################################################### BUILD TARGET START ####
+FROM ros2_lando_default AS ros2_ctrl_default
 
 RUN mkdir /home/user1/ws_rosdep_broken && cd ws_rosdep_broken && \
     git clone https://github.com/ros-controls/kinematics_interface && \
@@ -93,8 +95,10 @@ RUN mkdir -p /home/user1/ws_gazebo-ros2-control/src && cd ws_gazebo-ros2-control
 RUN cd /home/user1/ws_gazebo-ros2-control && /bin/bash -c "source /opt/ros/humble/setup.bash; source /home/user1/ros2_control_ws/install/setup.bash; colcon build" && \
     echo "source ~/ws_gazebo-ros2-control/install/setup.bash" >> ~/.bashrc
 
+
 ## MoveIt2 related stuff. Really heavy, build it only if needed ---------------------------------------------------------------------------------- ##
-FROM ros2CtrlDefault AS moveit2
+# moveit2 apt and demos from sources ######################################################################################################################## BUILD TARGET START ####
+FROM ros2_ctrl_default AS moveit2
 
 RUN sudo apt-get update && sudo apt-get install -y ros-humble-moveit*
 

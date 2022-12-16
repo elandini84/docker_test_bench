@@ -34,9 +34,9 @@ services:
   ros2-control-image:
     image: elandini84/ros2-bench-test:ros2Ctrl
     build:
-      dockerfile: Dockerfile
-      target: ros2CtrlDefault
       context: .
+      dockerfile: Dockerfile
+      target: ros2_ctrl_default
       args:
           username: user1
           uid: 1000
@@ -44,9 +44,9 @@ services:
   moveit2-image:
     image: elandini84/ros2-bench-test:moveit2
     build:
+      context: .
       dockerfile: Dockerfile
       target: moveit2
-      context: .
       args:
           username: user1
           uid: 1000
@@ -54,9 +54,9 @@ services:
   ros2-control-apt-image:
     image: elandini84/ros2-bench-test:ros2CtrlApt
     build:
-      dockerfile: Dockerfile
-      target: ros2CtrlApt
       context: .
+      dockerfile: Dockerfile
+      target: ros2_ctrl_apt
       args:
           username: user1
           uid: 1000
@@ -64,9 +64,9 @@ services:
   moveit2-apt-image:
     image: elandini84/ros2-bench-test:moveit2Apt
     build:
-      dockerfile: Dockerfile
-      target: moveIt2Apt
       context: .
+      dockerfile: Dockerfile
+      target: moveit2_apt
       args:
           username: user1
           uid: 1000
