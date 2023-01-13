@@ -1,0 +1,37 @@
+version: "3.7"
+
+x-base: &base
+  environment:
+    - DISPLAY=${DISPLAY}
+    - XAUTHORITY=/home/user1/.Xauthority
+    - QT_X11_NO_MITSHM=1
+    - DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user1/1000/bus
+    - LIBGL_ALWAYS_INDIRECT=0
+    - YARP_COLORED_OUTPUT=1
+  volumes:
+    - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
+    - "/etc/hosts:/etc/hosts"
+    - "${HOME}/.gitconfig:/home/user1/.gitconfig"
+  network_mode: host
+  ipc: host
+  pid: host
+  privileged: true
+  security_opt:
+    - apparmor:unconfined
+
+
+services:
+
+# Images
+  ros2-control-sim-image:
+    image: elandini84/ros2-bench-test:ros2Ctrl_sim
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: ros2_ctrl_default
+
+  terminatorCtrlSim:
+    image: elandini84/ros2-bench-test:ros2Ctrl_sim
+    <<: *base
+    container_name: terminatorCtrlSim
+    command: terminator -g /home/user1/.config/terminator/config
