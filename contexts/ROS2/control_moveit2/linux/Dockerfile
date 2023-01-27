@@ -95,6 +95,9 @@ RUN mkdir -p /home/user1/ws_gazebo-ros2-control/src && cd ws_gazebo-ros2-control
 RUN cd /home/user1/ws_gazebo-ros2-control && /bin/bash -c "source /opt/ros/humble/setup.bash; source /home/user1/ros2_control_ws/install/setup.bash; colcon build" && \
     echo "source ~/ws_gazebo-ros2-control/install/setup.bash" >> ~/.bashrc
 
+RUN cd robotology/yarp && git remote add elandini84 https://github.com/elandini84/yarp.git && \
+    git fetch elandini84
+
 
 ## MoveIt2 related stuff. Really heavy, build it only if needed ---------------------------------------------------------------------------------- ##
 # moveit2 apt from control sources ######################################################################################################################## BUILD TARGET START ####
@@ -116,8 +119,9 @@ RUN echo "source ~/robotology/yarp-devices-ros2/ros2_interfaces_ws/install/setup
 FROM moveit2 AS moveit2_demos
 
 RUN mkdir -p /home/user1/ws_moveit2/src && cd ws_moveit2/src && \
-    git clone https://github.com/ros-planning/moveit2_tutorials -b main && \
-    cd moveit2_tutorials && echo "repositories:" > moveit2_tutorials.repos && \
+    git clone https://github.com/ros-planning/moveit2_tutorials -b main
+
+RUN cd /home/user1/ws_moveit2/src/moveit2_tutorials && echo "repositories:" > moveit2_tutorials.repos && \
     echo "  moveit_task_constructor:" >> moveit2_tutorials.repos && \
     echo "    type: git" >> moveit2_tutorials.repos && \
     echo "    url: https://github.com/ros-planning/moveit_task_constructor.git" >> moveit2_tutorials.repos && \
@@ -126,6 +130,6 @@ RUN mkdir -p /home/user1/ws_moveit2/src && cd ws_moveit2/src && \
     echo "    type: git" >> moveit2_tutorials.repos && \
     echo "    url: https://github.com/PickNikRobotics/rosparam_shortcuts" >> moveit2_tutorials.repos && \
     echo "    version: ros2" >> moveit2_tutorials.repos && cd .. && \
-    vcs import < moveit2_tutorials/moveit2_tutorials.repos && cd .. && \
-    /bin/bash -c "source /opt/ros/humble/setup.bash; source /home/user1/ros2_control_ws/install/setup.bash; colcon build --mixin release"
+    vcs import < moveit2_tutorials/moveit2_tutorials.repos
+RUN cd /home/user1/ws_moveit2 /bin/bash -c "source /opt/ros/humble/setup.bash; source /home/user1/ros2_control_ws/install/setup.bash; colcon build --mixin release"
 RUN echo "source ~/ws_moveit2/install/setup.bash" >> ~/.bashrc

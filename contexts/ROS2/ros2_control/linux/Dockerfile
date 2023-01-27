@@ -15,8 +15,7 @@ WORKDIR /home/user1/robotology
 
 ENV RMW_IMPLEMENTATION=
 
-RUN git clone https://github.com/robotology/cer-sim && \
-    cd cer-sim && git remote add elandini84 https://github.com/elandini84/cer-sim.git && \
+RUN cd cer-sim && git remote add elandini84 https://github.com/elandini84/cer-sim.git && \
     git fetch elandini84 && git checkout feature/ros2_control
 
 RUN echo "source /opt/ros/humble/setup.bash" >> /home/user1/.bashrc
