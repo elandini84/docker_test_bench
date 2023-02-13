@@ -113,7 +113,7 @@ services:
     command: terminator -g /home/user1/.config/terminator/config
 
   terminatorMoveitDemos:
-    image: elandini84/ros2-bench-test:moveit2_demos
+    image: elandini84/ros2-bench-test:moveit2_demo
     <<: *base
     container_name: terminatorMoveitDemos
     command: terminator -g /home/user1/.config/terminator/config
