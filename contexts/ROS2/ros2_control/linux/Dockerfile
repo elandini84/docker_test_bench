@@ -13,8 +13,6 @@ RUN cd tour-guide-robot && git checkout ros2 && \
 
 WORKDIR /home/user1/robotology
 
-ENV RMW_IMPLEMENTATION=
-
 RUN cd cer-sim && git remote add elandini84 https://github.com/elandini84/cer-sim.git && \
     git fetch elandini84 && git checkout feature/ros2_control
 
