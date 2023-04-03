@@ -14,7 +14,7 @@ x-base: &base
     - "${HOME}/.gitconfig:/home/user1/.gitconfig"
 #    - "${HOME}/.config/yarp:/home/user1/.config/yarp:rw"
 #    - "${HOME}/.local/share/yarp:/home/user1/.local/share/yarp:rw"
-    - "${PLAY_CODE}/yarp-devices-ros2:/home/user1/robotology/yarp-devices-ros2:rw"
+    - "${ROBOT_CODE}/yarp-devices-ros2:/home/user1/robotology/yarp-devices-ros2:rw"
     - "${ROBOT_CODE}/cer-sim:/home/user1/robotology/cer-sim:rw"
     - "${HOME}/mainSrc/tests/fromDocker/moveit2-image/ws_ros2_tutorials:/home/user1/ws_ros2_tutorials:rw"
 #    - "${HOME}/mainSrc/GIT/robotology/gazebo-yarp-plugins:/home/user1/robotology/gazebo-yarp-plugins:rw"
