@@ -54,7 +54,7 @@ RUN mkdir /home/user1/ros2_control_ws && cd ros2_control_ws && mkdir src && \
     cd .. && git clone https://github.com/ros-controls/ros2_controllers && \
     #cd ros2_controllers && git fetch --all --tags && git checkout tags/2.3.0 -b v2.3.0-branch && cd .. && \
     cd ros2_controllers && git checkout 34da157213e64dbccbc32f3d478519371dbac54c && cd .. && \
-    git clone https://github.com/ros-controls/ros2_control_demos && \
+    git clone https://github.com/ros-controls/ros2_control_demos && cd ros2_control_demos && git checkout 1007b1dfe44f4146e64b04666a1164adeaf8ffa1 && cd .. && \
     git clone https://github.com/ros2/ros_testing
 RUN cd /home/user1/ros2_control_ws && /bin/bash -c "source /opt/ros/humble/setup.bash; source /home/user1/ws_rosdep_broken/kinematics_interface/install/setup.bash; rosdep install --from-paths src --ignore-src -r -y && colcon build --symlink-install" && \
     echo "source /home/user1/ros2_control_ws/install/setup.bash" >> /home/user1/.bashrc
