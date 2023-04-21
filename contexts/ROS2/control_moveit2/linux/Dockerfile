@@ -29,20 +29,14 @@ RUN groupmod -g $gid $username && \
 USER user1
 WORKDIR /home/user1
 
-RUN sudo apt-get update && sudo apt-get install -y nautilus python3-ipython ipython3 ros-humble-rviz*
-
-RUN cd tour-guide-robot && git checkout ros2 && \
-    git fetch origin && git pull origin ros2 && cd build && \
-    cmake .. && make -j11
+RUN sudo apt-get update && sudo apt-get install -y nautilus python3-ipython ipython3
 
 WORKDIR /home/user1/robotology
 
 ENV RMW_IMPLEMENTATION=
 
 RUN cd cer-sim && git remote add elandini84 https://github.com/elandini84/cer-sim.git && \
-    git fetch elandini84 && git checkout --track elandini84/test/ros2_based_control
-
-RUN echo "source /opt/ros/humble/setup.bash" >> /home/user1/.bashrc
+    git fetch elandini84
 
 RUN cd yarp-devices-ros2/ && git remote add elandini84 https://github.com/elandini84/yarp-devices-ros2.git && \
      git fetch elandini84
@@ -53,9 +47,9 @@ RUN cd navigation/ && git remote add elandini84 https://github.com/elandini84/na
 WORKDIR /home/user1
 
 # ROS2 launch file migrator
-RUN git clone https://github.com/aws-robotics/ros2-launch-file-migrator && \
-    cd ros2-launch-file-migrator && pip3 install -e ./ --user
-ENV PATH=$PATH:/home/user1/.local/bin
+#RUN git clone https://github.com/aws-robotics/ros2-launch-file-migrator && \
+#    cd ros2-launch-file-migrator && pip3 install -e ./ --user
+#ENV PATH=$PATH:/home/user1/.local/bin
 
 
 # ros2_control from apt ################################################################################################################################## BUILD TARGET START ####
@@ -125,7 +119,7 @@ RUN cd /home/user1/ws_moveit2/src/moveit2_tutorials && echo "repositories:" > mo
     echo "  moveit_task_constructor:" >> moveit2_tutorials.repos && \
     echo "    type: git" >> moveit2_tutorials.repos && \
     echo "    url: https://github.com/ros-planning/moveit_task_constructor.git" >> moveit2_tutorials.repos && \
-    echo "    version: ros2" >> moveit2_tutorials.repos && \
+    echo "    version: humble" >> moveit2_tutorials.repos && \
     echo "  rosparam_shortcuts:" >> moveit2_tutorials.repos && \
     echo "    type: git" >> moveit2_tutorials.repos && \
     echo "    url: https://github.com/PickNikRobotics/rosparam_shortcuts" >> moveit2_tutorials.repos && \

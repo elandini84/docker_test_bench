@@ -31,6 +31,16 @@ x-base: &base
 services:
 
 # Images
+  ros2-lando-default:
+    image: elandini84/ros2-bench-test:ros2Default
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: ros2_lando_default
+      args:
+          username: user1
+          uid: 1000
+          gid: 1000
   ros2-control-image:
     image: elandini84/ros2-bench-test:ros2Ctrl
     build:
@@ -101,9 +111,67 @@ services:
     command: terminator -g /home/user1/.config/terminator/config
 
   terminatorBase:
-    image: elandini84/r1images:r1Sim2
+    image: elandini84/ros2-bench-test:ros2Default
     <<: *base
+    environment:
+      - DISPLAY=${DISPLAY}
+      - XAUTHORITY=/home/user1/.Xauthority
+      - QT_X11_NO_MITSHM=1
+      - DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user1/1000/bus
+      - LIBGL_ALWAYS_INDIRECT=0
+      - YARP_COLORED_OUTPUT=1
+
+    volumes:
+      - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
+      - "/etc/hosts:/etc/hosts"
+      - "${HOME}/.gitconfig:/home/user1/.gitconfig"
     container_name: terminatorBase
+    command: terminator -g /home/user1/.config/terminator/config
+
+  terminatorBaseTeleop:
+    image: elandini84/ros2-bench-test:ros2Default
+    <<: *base
+    environment:
+      - DISPLAY=${DISPLAY}
+      - XAUTHORITY=/home/user1/.Xauthority
+      - QT_X11_NO_MITSHM=1
+      - DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user1/1000/bus
+      - LIBGL_ALWAYS_INDIRECT=0
+      - YARP_COLORED_OUTPUT=1
+
+    volumes:
+      - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
+      - "/etc/hosts:/etc/hosts"
+      - "${HOME}/.gitconfig:/home/user1/.gitconfig"
+      - "${ROBOT_CODE}/navigation:/home/user1/robotology/navigation:rw"
+      - "${ROBOT_CODE}/navigation/build_ros2_default:/home/user1/robotology/navigation/build:rw"
+      - "${ROBOT_CODE}/yarp-devices-ros2:/home/user1/robotology/yarp-devices-ros2:rw"
+      - "${ROBOT_CODE}/yarp-devices-ros2/build_ros2_default:/home/user1/robotology/yarp-devices-ros2/build:rw"
+      - "${ELANDINI84_CODE}/yarp-web-teleop:/home/user1/yarp-web-teleop:rw"
+      - "${HSP_CODE}/tour-guide-robot:/home/user1/tour-guide-robot:rw"
+      - "${HOME}/mainSrc/GIT/robotology/gazebo-yarp-plugins:/home/user1/robotology/gazebo-yarp-plugins:rw"
+    container_name: terminatorBaseTeleop
+    command: terminator -g /home/user1/.config/terminator/config
+
+  terminatorBaseGYP:
+    image: elandini84/ros2-bench-test:ros2Default
+    <<: *base
+    environment:
+      - DISPLAY=${DISPLAY}
+      - XAUTHORITY=/home/user1/.Xauthority
+      - QT_X11_NO_MITSHM=1
+      - DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user1/1000/bus
+      - LIBGL_ALWAYS_INDIRECT=0
+      - YARP_COLORED_OUTPUT=1
+
+    volumes:
+      - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
+      - "/etc/hosts:/etc/hosts"
+      - "${HOME}/.gitconfig:/home/user1/.gitconfig"
+      - "${HSP_CODE}/tour-guide-robot:/home/user1/tour-guide-robot:rw"
+      - "${HOME}/mainSrc/GIT/robotology/gazebo-yarp-plugins:/home/user1/robotology/gazebo-yarp-plugins:rw"
+      - "${HOME}/mainSrc/GIT/robotology/gazebo-yarp-plugins/build_ros2_default:/home/user1/robotology/gazebo-yarp-plugins/build:rw"
+    container_name: terminatorBaseGYP
     command: terminator -g /home/user1/.config/terminator/config
 
   terminatorMoveit:
