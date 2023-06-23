@@ -8,6 +8,7 @@ x-base: &base
     - DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user1/1000/bus
     - LIBGL_ALWAYS_INDIRECT=0
     - YARP_COLORED_OUTPUT=1
+    - NVIDIA_DRIVER_CAPABILITIES=all
   volumes:
     - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
     - "/etc/hosts:/etc/hosts"
@@ -113,14 +114,6 @@ services:
   terminatorBase:
     image: elandini84/ros2-bench-test:ros2Default
     <<: *base
-    environment:
-      - DISPLAY=${DISPLAY}
-      - XAUTHORITY=/home/user1/.Xauthority
-      - QT_X11_NO_MITSHM=1
-      - DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user1/1000/bus
-      - LIBGL_ALWAYS_INDIRECT=0
-      - YARP_COLORED_OUTPUT=1
-
     volumes:
       - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
       - "/etc/hosts:/etc/hosts"
@@ -131,39 +124,21 @@ services:
   terminatorBaseTeleop:
     image: elandini84/ros2-bench-test:ros2Default
     <<: *base
-    environment:
-      - DISPLAY=${DISPLAY}
-      - XAUTHORITY=/home/user1/.Xauthority
-      - QT_X11_NO_MITSHM=1
-      - DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user1/1000/bus
-      - LIBGL_ALWAYS_INDIRECT=0
-      - YARP_COLORED_OUTPUT=1
-
     volumes:
       - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
       - "/etc/hosts:/etc/hosts"
       - "${HOME}/.gitconfig:/home/user1/.gitconfig"
-      - "${ROBOT_CODE}/navigation:/home/user1/robotology/navigation:rw"
-      - "${ROBOT_CODE}/navigation/build_ros2_default:/home/user1/robotology/navigation/build:rw"
-      - "${ROBOT_CODE}/yarp-devices-ros2:/home/user1/robotology/yarp-devices-ros2:rw"
-      - "${ROBOT_CODE}/yarp-devices-ros2/build_ros2_default:/home/user1/robotology/yarp-devices-ros2/build:rw"
+      #- "${ROBOT_CODE}/navigation:/home/user1/robotology/navigation:rw"
+      #- "${ROBOT_CODE}/navigation/build_ros2_default:/home/user1/robotology/navigation/build:rw"
+      #- "${ROBOT_CODE}/yarp-devices-ros2:/home/user1/robotology/yarp-devices-ros2:rw"
+      #- "${ROBOT_CODE}/yarp-devices-ros2/build_ros2_default:/home/user1/robotology/yarp-devices-ros2/build:rw"
       - "${ELANDINI84_CODE}/yarp-web-teleop:/home/user1/yarp-web-teleop:rw"
-      - "${HSP_CODE}/tour-guide-robot:/home/user1/tour-guide-robot:rw"
-      - "${HOME}/mainSrc/GIT/robotology/gazebo-yarp-plugins:/home/user1/robotology/gazebo-yarp-plugins:rw"
     container_name: terminatorBaseTeleop
     command: terminator -g /home/user1/.config/terminator/config
 
   terminatorBaseGYP:
     image: elandini84/ros2-bench-test:ros2Default
     <<: *base
-    environment:
-      - DISPLAY=${DISPLAY}
-      - XAUTHORITY=/home/user1/.Xauthority
-      - QT_X11_NO_MITSHM=1
-      - DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user1/1000/bus
-      - LIBGL_ALWAYS_INDIRECT=0
-      - YARP_COLORED_OUTPUT=1
-
     volumes:
       - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
       - "/etc/hosts:/etc/hosts"
@@ -173,6 +148,13 @@ services:
       - "${HOME}/mainSrc/GIT/robotology/gazebo-yarp-plugins/build_ros2_default:/home/user1/robotology/gazebo-yarp-plugins/build:rw"
     container_name: terminatorBaseGYP
     command: terminator -g /home/user1/.config/terminator/config
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
 
   terminatorMoveit:
     image: elandini84/ros2-bench-test:moveit2
