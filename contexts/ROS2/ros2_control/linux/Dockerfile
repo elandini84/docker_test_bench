@@ -1,4 +1,4 @@
-FROM elandini84/r1images:tourNoNvidia_devel as ros2_tour_default
+FROM elandini84/r1images:tourCore2_ubuntu22.04_humble_devel as ros2_tour_default
 
 LABEL maintainer="Ettore Landini"
 
@@ -12,9 +12,6 @@ RUN cd tour-guide-robot && git checkout ros2 && \
     cmake .. && make -j11
 
 WORKDIR /home/user1/robotology
-
-RUN cd robots-configuration && git remote add elandini84 https://github.com/elandini84/robots-configuration.git && \
-    git fetch elandini84 && git checkout feature/R1SN003/ros2_control_cer_all_parameter
 
 RUN cd cer-sim && git remote add elandini84 https://github.com/elandini84/cer-sim.git && \
     git fetch elandini84 && git checkout feature/ros2_control

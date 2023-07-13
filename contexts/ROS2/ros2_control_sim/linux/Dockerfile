@@ -1,4 +1,4 @@
-FROM elandini84/r1images:r1Sim2 as ros2_tour_default
+FROM elandini84/r1images:tourSim2_ubuntu22.04_humble_devel as ros2_tour_default
 
 LABEL maintainer="Ettore Landini"
 
