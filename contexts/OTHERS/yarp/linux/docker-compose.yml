@@ -1,0 +1,53 @@
+version: "3.7"
+
+x-base: &base
+  environment:
+    - DISPLAY=${DISPLAY}
+    - XAUTHORITY=/home/yarp-user/.Xauthority
+    - QT_X11_NO_MITSHM=1
+    - DBUS_SESSION_BUS_ADDRESS=unix:path=/run/yarp-user/1000/bus
+    - LIBGL_ALWAYS_INDIRECT=0
+    - YARP_COLORED_OUTPUT=1
+  volumes:
+    - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
+    - "/etc/hosts:/etc/hosts"
+    - "${HOME}/.gitconfig:/home/yarp-user/.gitconfig"
+  network_mode: host
+  ipc: host
+  pid: host
+  privileged: true
+  security_opt:
+    - apparmor:unconfined
+
+services:
+
+# Images
+  yarp-master-ubuntu:
+    image: elandini84/yarp:ubuntu_22_04_master
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+          username: yarp-user
+          uid: 1000
+          gid: 1000
+          base_img: ubuntu:22.04
+          yarp_version: master
+  yarp-master-cuda:
+    image: elandini84/yarp:cuda.11.7.1-cudnn8_master
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+          username: yarp-user
+          uid: 1000
+          gid: 1000
+          base_img: nvidia/cuda:11.7.1-cudnn8-devel-ubuntu22.04
+          yarp_version: master
+
+# Containers
+  yarp-master-ubuntu-container:
+    image: elandini84/yarp:ubuntu_22_04_master
+    <<: *base
+    container_name: yarp-master-ubuntu-container
+    command: terminator -g /home/yarp-user/.config/terminator/config

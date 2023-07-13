@@ -1,0 +1,47 @@
+version: "3.7"
+
+x-base: &base
+  environment:
+    - DISPLAY=${DISPLAY}
+    - XAUTHORITY=/home/yarp-user/.Xauthority
+    - QT_X11_NO_MITSHM=1
+    - DBUS_SESSION_BUS_ADDRESS=unix:path=/run/yarp-user/1000/bus
+    - LIBGL_ALWAYS_INDIRECT=0
+    - YARP_COLORED_OUTPUT=1
+  volumes:
+    - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
+    - "/etc/hosts:/etc/hosts"
+    - "${HOME}/.gitconfig:/home/yarp-user/.gitconfig"
+  network_mode: host
+  ipc: host
+  pid: host
+  privileged: true
+  security_opt:
+    - apparmor:unconfined
+
+services:
+
+# Images
+  gccpp-master-ubuntu:
+    image: elandini84/google_cloud_cpp:yarp_ubuntu_22_04_master
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+          base_img: elandini84/yarp:ubuntu_22_04_master
+          google_cloud_version: main
+  gccpp-master-cuda:
+    image: elandini84/google_cloud_cpp:yarp_cuda.11.7.1-cudnn8_master
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+          base_img: elandini84/yarp:cuda.11.7.1-cudnn8_master
+          google_cloud_version: main
+
+# Containers
+  gccpp-master-ubuntu-container:
+    image: elandini84/google_cloud_cpp:yarp_ubuntu_22_04_master
+    <<: *base
+    container_name: gccpp-master-ubuntu-container
+    command: terminator -g /home/yarp-user/.config/terminator/config
