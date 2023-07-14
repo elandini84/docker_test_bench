@@ -63,9 +63,21 @@ RUN cd robotology/yarp-devices-ros2/ros2_interfaces_ws && \
     cd ../build && \
     /bin/bash -c "source /opt/ros/${ros2_distro}/setup.bash; source /home/user1/ros2_control_ws/install/setup.bash; source ~/robotology/yarp-devices-ros2/ros2_interfaces_ws/install/setup.bash; make -j11"
 
+RUN echo "source ~/.bashRos2ontrol" >> ~/.bashrc
+ENV YARP_DATA_DIRS=$YARP_DATA_DIRS:/home/user1/robotology/yarp-devices-ros2/build/share/yarp-devices-ros2
+
 # ros2_control from apt ################################################################################################################################## BUILD TARGET START ####
 FROM ros2_base_default AS ros2_ctrl_apt
 RUN sudo apt-get update && sudo apt-get install -y ros-${ros2_distro}-control* ros-${ros2_distro}-ros2-control ros-${ros2_distro}-ros2-controllers
+
+RUN cd robotology/cer-sim/colcon_ws && \
+    /bin/bash -c "source /opt/ros/${ros2_distro}/setup.bash; colcon build"
+RUN cd robotology/yarp-devices-ros2/ros2_interfaces_ws && \
+    /bin/bash -c "source /opt/ros/${ros2_distro}/setup.bash; colcon build" &&\
+    cd ../ros2_components_ws && \
+    /bin/bash -c "source /opt/ros/${ros2_distro}/setup.bash; source /home/user1/ros2_control_ws/install/setup.bash; source ~/robotology/yarp-devices-ros2/ros2_interfaces_ws/install/setup.bash; colcon build --packages-skip cb_hw_fw_generic" &&\
+    cd ../build && \
+    /bin/bash -c "source /opt/ros/${ros2_distro}/setup.bash; source /home/user1/ros2_control_ws/install/setup.bash; source ~/robotology/yarp-devices-ros2/ros2_interfaces_ws/install/setup.bash; make -j11"
 
 RUN echo "source ~/.bashRos2ontrol" >> ~/.bashrc
 ENV YARP_DATA_DIRS=$YARP_DATA_DIRS:/home/user1/robotology/yarp-devices-ros2/build/share/yarp-devices-ros2
