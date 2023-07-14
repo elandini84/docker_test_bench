@@ -23,15 +23,18 @@ x-base: &base
 services:
 
 # Images
-  ros2-control-dev-image:
-    image: elandini84/ros2-bench-test:ros2Ctrl_devel
+  ros2-control-apt-iron-ubuntu-dev-image:
+    image: elandini84/ros2-bench-test:ros2Ctrl_apt_ubuntu22.04_iron_devel
     build:
       context: .
       dockerfile: Dockerfile
-      target: ros2_ctrl_default
+      target: ros2_ctrl_apt
+      args:
+        - base_img=elandini84/r1images:tourCore2_ubuntu22.04_iron_devel
+        - ros2_distro=iron
 
-  terminatorCtrlDev:
-    image: elandini84/ros2-bench-test:ros2Ctrl_devel
+  ros2-control-apt-iron-ubuntu-dev-container:
+    image: elandini84/ros2-bench-test:ros2Ctrl_apt_ubuntu22.04_iron_devel
     <<: *base
-    container_name: terminatorCtrlDev
+    container_name: ros2-control-apt-iron-ubuntu-dev-container
     command: terminator -g /home/user1/.config/terminator/config
