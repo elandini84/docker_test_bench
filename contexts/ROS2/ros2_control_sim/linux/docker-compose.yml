@@ -23,15 +23,18 @@ x-base: &base
 services:
 
 # Images
-  ros2-control-sim-image:
-    image: elandini84/ros2-bench-test:ros2Ctrl_sim
+  ros2-control-sim-apt-iron-ubuntu-dev-image:
+    image: elandini84/ros2-bench-test:ros2Ctrl_sim_apt_ubuntu22.04_iron_devel
     build:
       context: .
       dockerfile: Dockerfile
-      target: ros2_ctrl_default
+      target: ros2_ctrl_apt
+      args:
+        - base_img=elandini84/r1images:tourSim2_ubuntu22.04_iron_devel
+        - ros2_distro=iron
 
-  terminatorCtrlSim:
-    image: elandini84/ros2-bench-test:ros2Ctrl_sim
+  ros2-control-sim-apt-iron-ubuntu-dev-container:
+    image: elandini84/ros2-bench-test:ros2Ctrl_sim_apt_ubuntu22.04_iron_devel
     <<: *base
-    container_name: terminatorCtrlSim
+    container_name: ros2-control-sim-apt-iron-ubuntu-dev-container
     command: terminator -g /home/user1/.config/terminator/config
