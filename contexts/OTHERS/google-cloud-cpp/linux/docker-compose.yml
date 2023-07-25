@@ -12,6 +12,7 @@ x-base: &base
     - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
     - "/etc/hosts:/etc/hosts"
     - "${HOME}/.gitconfig:/home/yarp-user/.gitconfig"
+    - "${ROBOT_CODE}/yarp-devices-google-cloud:/home/yarp-user/robotology/yarp-devices-google-cloud:rw"
     - "${SECRETS_DATA}/HSP-Speech-Interaction-DEV/hsp-speech-test/hsp-speech-interaction-dev-ad51a35ee0ea.json:/home/yarp-user/.config/google-credential/hsp_google.json"
   network_mode: host
   ipc: host
