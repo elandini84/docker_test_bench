@@ -8,7 +8,7 @@ LABEL maintainer="Ettore Landini"
 USER user1
 WORKDIR /home/user1
 
-RUN sudo apt-get update && sudo apt-get install -y nautilus python3-ipython ipython3 ros-${ros2_distro}-rviz*
+RUN sudo apt-get update && sudo apt-get install -y nautilus python3-ipython ipython3 ros-${ros2_distro}-rviz* ros-${ros2_distro}-xacro
 
 WORKDIR /home/user1/robotology
 
@@ -36,6 +36,8 @@ ENV PATH=$PATH:/home/user1/.local/bin
 
 # ros2_control from source ############################################################################################################################### BUILD TARGET START ####
 FROM ros2_base_default AS ros2_ctrl_default
+
+ARG ros2_distro
 
 WORKDIR /home/user1
 
@@ -68,6 +70,9 @@ ENV YARP_DATA_DIRS=$YARP_DATA_DIRS:/home/user1/robotology/yarp-devices-ros2/buil
 
 # ros2_control from apt ################################################################################################################################## BUILD TARGET START ####
 FROM ros2_base_default AS ros2_ctrl_apt
+
+ARG ros2_distro
+
 RUN sudo apt-get update && sudo apt-get install -y ros-${ros2_distro}-control* ros-${ros2_distro}-ros2-control ros-${ros2_distro}-ros2-controllers
 
 RUN cd robotology/cer-sim/colcon_ws && \
