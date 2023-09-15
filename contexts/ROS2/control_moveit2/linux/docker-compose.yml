@@ -126,7 +126,7 @@ services:
   terminatorBaseUbuntuIron:
     image: elandini84/ros2-bench-test:ros2Default_ubuntu22.04_iron
     <<: *base
-    volumesUbuntuIron:
+    volumes:
       - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
       - "/etc/hosts:/etc/hosts"
       - "${HOME}/.gitconfig:/home/user1/.gitconfig"
