@@ -42,6 +42,8 @@ services:
           username: user1
           uid: 1000
           gid: 1000
+          base_img: elandini84/r1images:tourSim2_ubuntu22.04_iron_devel
+          ros2_distro: iron
   ros2-control-image:
     image: elandini84/ros2-bench-test:ros2Ctrl
     build:
@@ -52,6 +54,8 @@ services:
           username: user1
           uid: 1000
           gid: 1000
+          base_img: elandini84/r1images:tourSim2_ubuntu22.04_iron_devel
+          ros2_distro: iron
   moveit2-image:
     image: elandini84/ros2-bench-test:moveit2
     build:
@@ -62,6 +66,8 @@ services:
           username: user1
           uid: 1000
           gid: 1000
+          base_img: elandini84/r1images:tourSim2_ubuntu22.04_iron_devel
+          ros2_distro: iron
   moveit2-demos-image:
     image: elandini84/ros2-bench-test:moveit2_demo
     build:
@@ -72,6 +78,8 @@ services:
           username: user1
           uid: 1000
           gid: 1000
+          base_img: elandini84/r1images:tourSim2_ubuntu22.04_iron_devel
+          ros2_distro: iron
   ros2-control-apt-image:
     image: elandini84/ros2-bench-test:ros2CtrlApt
     build:
@@ -82,6 +90,8 @@ services:
           username: user1
           uid: 1000
           gid: 1000
+          base_img: elandini84/r1images:tourSim2_ubuntu22.04_iron_devel
+          ros2_distro: iron
   moveit2-apt-image:
     image: elandini84/ros2-bench-test:moveit2Apt
     build:
@@ -92,6 +102,8 @@ services:
           username: user1
           uid: 1000
           gid: 1000
+          base_img: elandini84/r1images:tourSim2_ubuntu22.04_iron_devel
+          ros2_distro: iron
 
   terminatorCtrlApt:
     image: elandini84/ros2-bench-test:ros2CtrlApt
