@@ -32,8 +32,8 @@ x-base: &base
 services:
 
 # Images
-  ros2-lando-default:
-    image: elandini84/ros2-bench-test:ros2Default
+  ros2-lando-ubuntu-iron-default:
+    image: elandini84/ros2-bench-test:ros2Default_ubuntu22.04_iron
     build:
       context: .
       dockerfile: Dockerfile
@@ -44,8 +44,8 @@ services:
           gid: 1000
           base_img: elandini84/r1images:tourSim2_ubuntu22.04_iron_devel
           ros2_distro: iron
-  ros2-control-image:
-    image: elandini84/ros2-bench-test:ros2Ctrl
+  ros2-control-ubuntu-iron-image:
+    image: elandini84/ros2-bench-test:ros2Ctrl_ubuntu22.04_iron
     build:
       context: .
       dockerfile: Dockerfile
@@ -56,8 +56,8 @@ services:
           gid: 1000
           base_img: elandini84/r1images:tourSim2_ubuntu22.04_iron_devel
           ros2_distro: iron
-  moveit2-image:
-    image: elandini84/ros2-bench-test:moveit2
+  moveit2-ubuntu-iron-image:
+    image: elandini84/ros2-bench-test:moveit2_ubuntu22.04_iron
     build:
       context: .
       dockerfile: Dockerfile
@@ -68,8 +68,8 @@ services:
           gid: 1000
           base_img: elandini84/r1images:tourSim2_ubuntu22.04_iron_devel
           ros2_distro: iron
-  moveit2-demos-image:
-    image: elandini84/ros2-bench-test:moveit2_demo
+  moveit2-demos-iubuntu-iron-mage:
+    image: elandini84/ros2-bench-test:moveit2_demo_ubuntu22.04_iron
     build:
       context: .
       dockerfile: Dockerfile
@@ -80,8 +80,8 @@ services:
           gid: 1000
           base_img: elandini84/r1images:tourSim2_ubuntu22.04_iron_devel
           ros2_distro: iron
-  ros2-control-apt-image:
-    image: elandini84/ros2-bench-test:ros2CtrlApt
+  ros2-control-apt-ubuntu-iron-image:
+    image: elandini84/ros2-bench-test:ros2CtrlApt_ubuntu22.04_iron
     build:
       context: .
       dockerfile: Dockerfile
@@ -92,8 +92,8 @@ services:
           gid: 1000
           base_img: elandini84/r1images:tourSim2_ubuntu22.04_iron_devel
           ros2_distro: iron
-  moveit2-apt-image:
-    image: elandini84/ros2-bench-test:moveit2Apt
+  moveit2-apt-ubuntu-iron-image:
+    image: elandini84/ros2-bench-test:moveit2Apt_ubuntu22.04_iron
     build:
       context: .
       dockerfile: Dockerfile
@@ -105,36 +105,36 @@ services:
           base_img: elandini84/r1images:tourSim2_ubuntu22.04_iron_devel
           ros2_distro: iron
 
-  terminatorCtrlApt:
-    image: elandini84/ros2-bench-test:ros2CtrlApt
+  terminatorCtrlAptUbuntuIron:
+    image: elandini84/ros2-bench-test:ros2CtrlApt_ubuntu22.04_iron
     <<: *base
     container_name: terminatorCtrlApt
     command: terminator -g /home/user1/.config/terminator/config
 
-  terminatorMoveitApt:
-    image: elandini84/ros2-bench-test:moveit2Apt
+  terminatorMoveitAptUbuntuIron:
+    image: elandini84/ros2-bench-test:moveit2Apt_ubuntu22.04_iron
     <<: *base
     container_name: terminatorMoveitApt
     command: terminator -g /home/user1/.config/terminator/config
 
-  terminatorCtrl:
-    image: elandini84/ros2-bench-test:ros2Ctrl
+  terminatorCtrlUbuntuIron:
+    image: elandini84/ros2-bench-test:ros2Ctrl_ubuntu22.04_iron
     <<: *base
     container_name: terminatorCtrl
     command: terminator -g /home/user1/.config/terminator/config
 
-  terminatorBase:
-    image: elandini84/ros2-bench-test:ros2Default
+  terminatorBaseUbuntuIron:
+    image: elandini84/ros2-bench-test:ros2Default_ubuntu22.04_iron
     <<: *base
-    volumes:
+    volumesUbuntuIron:
       - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
       - "/etc/hosts:/etc/hosts"
       - "${HOME}/.gitconfig:/home/user1/.gitconfig"
     container_name: terminatorBase
     command: terminator -g /home/user1/.config/terminator/config
 
-  terminatorBaseTeleop:
-    image: elandini84/ros2-bench-test:ros2Default
+  terminatorBaseTeleopUbuntuIron:
+    image: elandini84/ros2-bench-test:ros2Default_ubuntu22.04_iron
     <<: *base
     volumes:
       - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
@@ -148,8 +148,8 @@ services:
     container_name: terminatorBaseTeleop
     command: terminator -g /home/user1/.config/terminator/config
 
-  terminatorBaseGYP:
-    image: elandini84/ros2-bench-test:ros2Default
+  terminatorBaseGYPUbuntuIron:
+    image: elandini84/ros2-bench-test:ros2Default_ubuntu22.04_iron
     <<: *base
     volumes:
       - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
@@ -168,14 +168,14 @@ services:
               count: 1
               capabilities: [gpu]
 
-  terminatorMoveit:
-    image: elandini84/ros2-bench-test:moveit2
+  terminatorMoveitUbuntuIron:
+    image: elandini84/ros2-bench-test:moveit2_ubuntu22.04_iron
     <<: *base
     container_name: terminatorMoveit
     command: terminator -g /home/user1/.config/terminator/config
 
-  terminatorMoveitDemos:
-    image: elandini84/ros2-bench-test:moveit2_demo
+  terminatorMoveitDemosUbuntuIron:
+    image: elandini84/ros2-bench-test:moveit2_demo_ubuntu22.04_iron
     <<: *base
     container_name: terminatorMoveitDemos
     command: terminator -g /home/user1/.config/terminator/config
