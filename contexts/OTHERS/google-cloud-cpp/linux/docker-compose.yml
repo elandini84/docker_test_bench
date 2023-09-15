@@ -13,6 +13,8 @@ x-base: &base
     - "/etc/hosts:/etc/hosts"
     - "${HOME}/.gitconfig:/home/yarp-user/.gitconfig"
     - "${ROBOT_CODE}/yarp-devices-google-cloud:/home/yarp-user/robotology/yarp-devices-google-cloud:rw"
+    - "${ROBOT_CODE}/yarp:/home/yarp-user/robotology/yarp:rw"
+    - "${ROBOT_CODE}/yarp/build_docker:/home/yarp-user/robotology/yarp/build:rw"
     - "${SECRETS_DATA}/HSP-Speech-Interaction-DEV/hsp-speech-test/hsp-speech-interaction-dev-ad51a35ee0ea.json:/home/yarp-user/.config/google-credential/hsp_google.json"
   network_mode: host
   ipc: host
@@ -31,7 +33,7 @@ services:
       dockerfile: Dockerfile
       args:
           base_img: elandini84/yarp:ubuntu_22_04_master
-          google_cloud_version: main
+          google_cloud_version: v2.14.x
   gccpp-master-cuda:
     image: elandini84/google_cloud_cpp:yarp_cuda.11.7.1-cudnn8_master
     build:
@@ -39,7 +41,7 @@ services:
       dockerfile: Dockerfile
       args:
           base_img: elandini84/yarp:cuda.11.7.1-cudnn8_master
-          google_cloud_version: main
+          google_cloud_version: v2.14.x
 
 # Containers
   gccpp-master-ubuntu-container:

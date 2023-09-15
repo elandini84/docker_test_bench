@@ -6,7 +6,6 @@ ARG google_cloud_version
 
 USER yarp-user
 WORKDIR /home/yarp-user/
-RUN git clone https://github.com/googleapis/google-cloud-cpp.git -b ${google_cloud_version}
 
 ### Packaging google-cloud-cpp instructions ############################################# START ####
 RUN mkdir Downloads
@@ -92,11 +91,15 @@ RUN cd json && \
     sudo cmake --build cmake-out --target install -- -j ${NCPU:-4} && \
     sudo ldconfig
 
-WORKDIR /home/yarp-user/google-cloud-cpp
+WORKDIR /home/yarp-user
+RUN git clone https://github.com/googleapis/google-cloud-cpp.git
+
 ENV PREFIX="/home/yarp-user/google-cloud-cpp-installed"
 #ENV PREFIX="/usr/local"
-RUN cmake -S . -B cmake-out \
+RUN cd google-cloud-cpp && git checkout ${google_cloud_version} && \
+    cmake -S . -B cmake-out \
         -DCMAKE_INSTALL_PREFIX="${PREFIX}" \
+        -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
         -DBUILD_TESTING=OFF \
         -DGOOGLE_CLOUD_CPP_ENABLE_EXAMPLES=OFF \
         -DGOOGLE_CLOUD_CPP_ENABLE=__ga_libraries__ && \
@@ -111,24 +114,11 @@ ENV google_cloud_cpp_speech_DIR=/home/yarp-user/google-cloud-cpp-installed/lib/c
 ENV google_cloud_cpp_dialogflow_cx_DIR=/home/yarp-user/google-cloud-cpp-installed/lib/cmake/google_cloud_cpp_dialogflow_cx
 ### Packaging google-cloud-cpp instructions ############################################### END ####
 
-### Texttospeech quickstart instructions ################################################ START ####
-# WORKDIR /home/yarp-user
-# RUN git clone https://github.com/microsoft/vcpkg.git
-# ENV VCPKG_ROOT=/home/yarp-user/vcpkg
-# RUN cd vcpkg && ./bootstrap-vcpkg.sh && ./vcpkg install google-cloud-cpp[core,texttospeech]
-
-# RUN cd google-cloud-cpp/google/cloud/texttospeech/quickstart && \
-#     cmake -S . -B .build -DCMAKE_TOOLCHAIN_FILE=/home/yarp-user/vcpkg/scripts/buildsystems/vcpkg.cmake && \
-#     cmake --build .build
-### Texttospeech quickstart instructions ################################################## END ####
-
-### Google-cloud-cpp README file instructions ########################################### START ####
-#WORKDIR /home/yarp-user/google-cloud-cpp
-#RUN git -C $HOME clone https://github.com/microsoft/vcpkg.git
-#ENV VCPKG_ROOT=vcpkg
-#RUN vcpkg/bootstrap-vcpkg.sh
-#RUN cmake -S . -B cmake-out/ -DCMAKE_TOOLCHAIN_FILE=vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF
-#RUN cmake --build cmake-out -- -j $(nproc)
-### Google-cloud-cpp README file instructions ############################################# END ####
-
 ENV GOOGLE_APPLICATION_CREDENTIALS=/home/yarp-user/.config/google-credential/hsp_google.json
+ENV BUILD_SUFFIX=build
+
+WORKDIR ${robotology_install_folder}
+RUN git clone https://github.com/elandini84/yarp-devices-google-cloud && \
+    cd yarp-devices-google-cloud && mkdir build && cd build && \
+    cmake .. && make -j11
+ENV YARP_DATA_DIRS=${YARP_DATA_DIRS}:/home/yarp-user/robotology/yarp-devices-google-cloud/build/share/yarp:/home/yarp-user/robotology/yarp-devices-google-cloud/build/share/

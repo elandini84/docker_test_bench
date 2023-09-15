@@ -22,7 +22,7 @@ COPY ./common/xorg.conf /etc/X11/xorg.conf
 # Install yarp dependencies
 RUN echo "deb http://www.icub.org/ubuntu `lsb_release -cs` contrib/science" > /etc/apt/sources.list.d/icub.list
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 57A5ACB6110576A6
-RUN apt-get update && apt-get install -y icub-common libopencv-dev && sudo rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y icub-common libopencv-dev libsqlite3-dev && sudo rm -rf /var/lib/apt/lists/*
 
 # Create user: yarp-user
 USER root
@@ -103,7 +103,8 @@ RUN cd yarp && mkdir build && cd build && \
     -DENABLE_yarppm_image_compression_ffmpeg=ON \
     -DENABLE_yarppm_depthimage_to_mono=ON \
     -DENABLE_yarppm_depthimage_to_rgb=ON && \
-    make -j11
+    make -j11 && cmake .. -DALLOW_IDL_GENERATION=ON && \
+    make -j11 && cmake .. -DALLOW_IDL_GENERATION=OFF
 ENV YARP_ROOT=$robotology_install_folder/yarp
 ENV YARP_DIR=$robotology_install_folder/yarp/build
 
