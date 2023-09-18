@@ -33,7 +33,7 @@ services:
       dockerfile: Dockerfile
       args:
           base_img: elandini84/yarp:ubuntu_22_04_master
-          google_cloud_version: v2.14.x
+          google_cloud_version: v2.15.x
   gccpp-master-cuda:
     image: elandini84/google_cloud_cpp:yarp_cuda.11.7.1-cudnn8_master
     build:
@@ -41,7 +41,7 @@ services:
       dockerfile: Dockerfile
       args:
           base_img: elandini84/yarp:cuda.11.7.1-cudnn8_master
-          google_cloud_version: v2.14.x
+          google_cloud_version: v2.15.x
 
 # Containers
   gccpp-master-ubuntu-container:
