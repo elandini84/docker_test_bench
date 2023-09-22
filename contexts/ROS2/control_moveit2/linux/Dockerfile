@@ -130,3 +130,20 @@ RUN cd /home/user1/ws_moveit2/src/moveit2_tutorials && echo "repositories:" > mo
     vcs import < moveit2_tutorials/moveit2_tutorials.repos
 RUN cd /home/user1/ws_moveit2 && /bin/bash -c "source /opt/ros/${ros2_distro}/setup.bash; source /home/user1/ros2_control_ws/install/setup.bash; colcon build --mixin release"
 RUN echo "source ~/ws_moveit2/install/setup.bash" >> ~/.bashrc
+
+# moveit2 for students from APT ############################################################################################################################## BUILD TARGET START ####
+from moveit2_apt as moveit2_apt_students
+
+WORKDIR /home/user1/robotology
+RUN cd cer-sim && git checkout feature/ros2_pos_vel_test && \
+    cd colcon_ws && /bin/bash -c "source /opt/ros/${ros2_distro}/setup.bash; colcon build"
+
+RUN cd yarp-devices-ros2 && checkout feature/ros2_control/pos_vel_test && \
+    cd ros2_components_ws && /bin/bash -c "source /opt/ros/${ros2_distro}/setup.bash; colcon build"
+
+
+WORKDIR /home/user1
+RUN echo "source ~/robotology/yarp-devices-ros2/ros2_interfaces_ws/install/setup.bash" >> .bash_test && \
+    echo "source ~/robotology/yarp-devices-ros2/ros2_components_ws/install/setup.bash" >> .bash_test && \
+    echo "source ~/robotology/cer-sim/colcon_ws/install/setup.bash" >> .bash_test
+    echo "source ~/.bash_test" >> .bashrc
