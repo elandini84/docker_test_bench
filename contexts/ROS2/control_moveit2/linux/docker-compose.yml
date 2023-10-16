@@ -142,6 +142,7 @@ services:
       - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
       - "/etc/hosts:/etc/hosts"
       - "${HOME}/.gitconfig:/home/user1/.gitconfig"
+      - "${HSP_CODE}/tour-guide-robot:/home/user1/tour-guide-robot:rw"
     container_name: terminatorBase
     command: terminator -g /home/user1/.config/terminator/config
 

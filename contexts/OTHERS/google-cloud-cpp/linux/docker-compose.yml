@@ -26,16 +26,16 @@ x-base: &base
 services:
 
 # Images
-  gccpp-master-ubuntu:
-    image: elandini84/google_cloud_cpp:yarp_ubuntu_22_04_master
+  gccpp-master-ubuntu-v2-15:
+    image: elandini84/google_cloud_cpp:v2.15_yarp_ubuntu_22_04_master
     build:
       context: .
       dockerfile: Dockerfile
       args:
           base_img: elandini84/yarp:ubuntu_22_04_master
           google_cloud_version: v2.15.x
-  gccpp-master-cuda:
-    image: elandini84/google_cloud_cpp:yarp_cuda.11.7.1-cudnn8_master
+  gccpp-master-cuda-v2-15:
+    image: elandini84/google_cloud_cpp:v2.15_yarp_cuda.11.7.1-cudnn8_master
     build:
       context: .
       dockerfile: Dockerfile
@@ -44,8 +44,8 @@ services:
           google_cloud_version: v2.15.x
 
 # Containers
-  gccpp-master-ubuntu-container:
-    image: elandini84/google_cloud_cpp:yarp_ubuntu_22_04_master
+  gccpp-master-ubuntu-v2-15-container:
+    image: elandini84/google_cloud_cpp:v2.15_yarp_ubuntu_22_04_master
     <<: *base
-    container_name: gccpp-master-ubuntu-container
+    container_name: gccpp-master-ubuntu-v2-15-container
     command: terminator -g /home/yarp-user/.config/terminator/config
