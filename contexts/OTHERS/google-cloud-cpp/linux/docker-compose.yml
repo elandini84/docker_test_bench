@@ -26,6 +26,14 @@ x-base: &base
 services:
 
 # Images
+  gccpp-master-ubuntu-v2-12:
+    image: elandini84/google_cloud_cpp:v2.12_yarp_ubuntu_22_04_master
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+          base_img: elandini84/yarp:ubuntu_22_04_master
+          google_cloud_version: v2.12.x
   gccpp-master-ubuntu-v2-15:
     image: elandini84/google_cloud_cpp:v2.15_yarp_ubuntu_22_04_master
     build:
@@ -44,6 +52,11 @@ services:
           google_cloud_version: v2.15.x
 
 # Containers
+  gccpp-master-ubuntu-v2-12-container:
+    image: elandini84/google_cloud_cpp:v2.12_yarp_ubuntu_22_04_master
+    <<: *base
+    container_name: gccpp-master-ubuntu-v2-12-container
+    command: terminator -g /home/yarp-user/.config/terminator/config
   gccpp-master-ubuntu-v2-15-container:
     image: elandini84/google_cloud_cpp:v2.15_yarp_ubuntu_22_04_master
     <<: *base
