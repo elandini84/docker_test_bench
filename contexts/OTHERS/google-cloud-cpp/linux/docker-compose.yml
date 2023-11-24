@@ -62,3 +62,8 @@ services:
     <<: *base
     container_name: gccpp-master-ubuntu-v2-15-container
     command: terminator -g /home/yarp-user/.config/terminator/config
+  gccpp-master-ubuntu-v2-12-valgrind:
+    image: elandini84/google_cloud_cpp:v2.12_yarp_ubuntu_22_04_master
+    <<: *base
+    container_name: gccpp-master-ubuntu-v2-12-container
+    command: bash -c "sudo apt install -y valgrind ninja-build && terminator -g /home/yarp-user/.config/terminator/config"

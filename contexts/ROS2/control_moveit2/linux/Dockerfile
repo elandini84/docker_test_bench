@@ -132,7 +132,7 @@ RUN cd /home/user1/ws_moveit2 && /bin/bash -c "source /opt/ros/${ros2_distro}/se
 RUN echo "source ~/ws_moveit2/install/setup.bash" >> ~/.bashrc
 
 # moveit2 for students from APT ############################################################################################################################## BUILD TARGET START ####
-from moveit2_apt as moveit2_apt_students
+FROM moveit2_apt as moveit2_apt_students
 
 WORKDIR /home/user1/robotology
 RUN cd cer-sim && git checkout feature/ros2_pos_vel_test && \
