@@ -135,10 +135,10 @@ RUN echo "source ~/ws_moveit2/install/setup.bash" >> ~/.bashrc
 FROM moveit2_apt as moveit2_apt_students
 
 WORKDIR /home/user1/robotology
-RUN cd cer-sim && git checkout feature/ros2_pos_vel_test && \
+RUN cd cer-sim && git checkout feature/cer_moveit2 && \
     cd colcon_ws && /bin/bash -c "source /opt/ros/${ros2_distro}/setup.bash; colcon build"
 
-RUN cd yarp-devices-ros2 && git checkout feature/ros2_control/pos_vel_test && \
+RUN cd yarp-devices-ros2 && git checkout feature/ros2_control/fw_pos_read_pos_vel && \
     cd ros2_components_ws && /bin/bash -c "source /opt/ros/${ros2_distro}/setup.bash; source ~/robotology/yarp-devices-ros2/ros2_interfaces_ws/install/setup.bash; colcon build"
 
 
