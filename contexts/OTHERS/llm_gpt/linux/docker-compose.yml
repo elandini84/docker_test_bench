@@ -1,0 +1,61 @@
+version: "3.7"
+
+x-base: &base
+  environment:
+    - DISPLAY=${DISPLAY}
+    - XAUTHORITY=/home/yarp-user/.Xauthority
+    - QT_X11_NO_MITSHM=1
+    - DBUS_SESSION_BUS_ADDRESS=unix:path=/run/yarp-user/1000/bus
+    - LIBGL_ALWAYS_INDIRECT=0
+    - YARP_COLORED_OUTPUT=1
+    - AZURE_RESOURCE=${AZURE_RESOURCE}
+    - AZURE_API_KEY=${AZURE_API_KEY}
+    - DEPLOYMENT_ID=${DEPLOYMENT_ID}
+  volumes:
+    - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
+    - "/etc/hosts:/etc/hosts"
+    - "${HOME}/.gitconfig:/home/yarp-user/.gitconfig"
+    - "${ROBOT_CODE}/yarp-devices-llm:/home/yarp-user/robotology/yarp-llm:rw"
+  network_mode: host
+  ipc: host
+  pid: host
+  privileged: true
+  security_opt:
+    - apparmor:unconfined
+
+services:
+
+# Images
+  llm-master:
+    image: elandini84/llm_gpt:master
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+          base_img: fbrand-new/llm_docker:master
+          username: user
+          uid: 1000
+          gid: 1000
+  llm-aux:
+    image: elandini84/llm_gpt:aux
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+          base_img: fbrand-new/llm_docker:aux
+          username: user
+          uid: 1000
+          gid: 1000
+
+# Containers
+  llm-master-container:
+    image: elandini84/llm_gpt:master
+    <<: *base
+    container_name: llm-master-container
+    command: terminator -g /home/yarp-user/.config/terminator/config
+  llm-aux-container:
+    image: elandini84/llm_gpt:aux
+    <<: *base
+    container_name: llm-aux-container
+    command: terminator -g /home/yarp-user/.config/terminator/config
+
