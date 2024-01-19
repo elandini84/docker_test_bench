@@ -14,8 +14,9 @@ x-base: &base
   volumes:
     - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
     - "/etc/hosts:/etc/hosts"
-    - "${HOME}/.gitconfig:/home/yarp-user/.gitconfig"
-    - "${ROBOT_CODE}/yarp-devices-llm:/home/yarp-user/robotology/yarp-llm:rw"
+    - "${HOME}/.gitconfig:/home/user/.gitconfig"
+    - "${HOME}/.config/YARP:/home/user/.config/yarp:rw"
+    # - "${ROBOT_CODE}/yarp-devices-llm:/home/yarp-user/robotology/yarp-llm:rw"
   network_mode: host
   ipc: host
   pid: host
