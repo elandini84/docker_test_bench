@@ -1,0 +1,45 @@
+version: "3.7"
+
+x-base: &base
+  environment:
+    - DISPLAY=${DISPLAY}
+    - XAUTHORITY=/home/yarp-user/.Xauthority
+    - QT_X11_NO_MITSHM=1
+    - DBUS_SESSION_BUS_ADDRESS=unix:path=/run/yarp-user/1000/bus
+    - LIBGL_ALWAYS_INDIRECT=0
+    - YARP_COLORED_OUTPUT=1
+  volumes:
+    - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
+    - "/etc/hosts:/etc/hosts"
+    - "${HOME}/.gitconfig:/home/user1/.gitconfig"
+    - "${HOME}/.config/YARP:/home/user1/.config/yarp:rw"
+    - "${HSP_CODE}/convince_simple_bts:/home/user1/convince_simple_bts"
+  network_mode: host
+  ipc: host
+  pid: host
+  privileged: true
+  security_opt:
+    - apparmor:unconfined
+
+services:
+
+# Images
+  convince-simple-yarp3-9:
+    image: elandini84/convince_simple:yarp-3.9
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+          base_img: elandini84/r1images:tourSim2_ubuntu22.04_iron_yarp-3.9_devel
+          username: user1
+          uid: 1000
+          gid: 1000
+
+# Containers
+  convince-simple-yarp3-9-container:
+    image: elandini84/convince_simple:yarp-3.9
+    <<: *base
+    container_name: convince-simple-yarp3-9-container
+    command: terminator -g /home/yarp-user/.config/terminator/config
+
+

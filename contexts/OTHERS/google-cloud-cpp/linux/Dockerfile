@@ -117,7 +117,10 @@ ENV google_cloud_cpp_dialogflow_cx_DIR=/home/yarp-user/google-cloud-cpp-installe
 ENV GOOGLE_APPLICATION_CREDENTIALS=/home/yarp-user/.config/google-credential/hsp_google.json
 ENV BUILD_SUFFIX=build
 
+RUN sudo apt install -y libsqlite3-0 libsqlite3-dev
+
 WORKDIR ${robotology_install_folder}
+RUN cd yarp/build && cmake ..
 RUN git clone https://github.com/elandini84/yarp-devices-google-cloud && \
     cd yarp-devices-google-cloud && mkdir build && cd build && \
     cmake .. && make -j11
