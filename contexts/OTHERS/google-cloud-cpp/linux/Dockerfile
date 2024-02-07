@@ -121,7 +121,7 @@ RUN sudo apt install -y libsqlite3-0 libsqlite3-dev
 
 WORKDIR ${robotology_install_folder}
 RUN cd yarp/build && cmake ..
-RUN git clone https://github.com/elandini84/yarp-devices-google-cloud && \
+RUN git clone https://github.com/robotology/yarp-devices-google-cloud && \
     cd yarp-devices-google-cloud && mkdir build && cd build && \
     cmake .. && make -j11
 ENV YARP_DATA_DIRS=${YARP_DATA_DIRS}:/home/yarp-user/robotology/yarp-devices-google-cloud/build/share/yarp:/home/yarp-user/robotology/yarp-devices-google-cloud/build/share/
