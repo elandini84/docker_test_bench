@@ -50,3 +50,7 @@ RUN sudo apt update && \
     --symlink-install"
 RUN echo "source /home/yarp-user/nav2_ws/install/setup.bash" >> /home/yarp-user/.ros2_source && \
     echo "source /home/yarp-user/.ros2_source" >> /home/yarp-user/.bashrc
+
+WORKDIR /home/yarp-user
+RUN git clone https://github.com/hsp-iit/tour-guide-robot -b refactor/app/envVariables && \
+    cd tour-guide-robot && mkdir build && cd build && cmake ..
