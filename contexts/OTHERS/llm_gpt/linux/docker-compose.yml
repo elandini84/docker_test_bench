@@ -16,6 +16,8 @@ x-base: &base
     - "/etc/hosts:/etc/hosts"
     - "${HOME}/.gitconfig:/home/user/.gitconfig"
     - "${HOME}/.config/YARP:/home/user/.config/yarp:rw"
+    - "${ELANDINI84_CODE}/gpt_prompts:/home/user/gpt_prompts/:rw"
+    - "${HOME}/userDump/robotinterface:/home/user/robotinterface:rw"
     # - "${ROBOT_CODE}/yarp-devices-llm:/home/yarp-user/robotology/yarp-llm:rw"
   network_mode: host
   ipc: host
