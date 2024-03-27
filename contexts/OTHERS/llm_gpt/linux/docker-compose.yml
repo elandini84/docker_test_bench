@@ -18,7 +18,8 @@ x-base: &base
     - "${HOME}/.config/YARP:/home/user/.config/yarp:rw"
     - "${ELANDINI84_CODE}/gpt_prompts:/home/user/gpt_prompts/:rw"
     - "${HOME}/userDump/robotinterface:/home/user/robotinterface:rw"
-    # - "${ROBOT_CODE}/yarp-devices-llm:/home/yarp-user/robotology/yarp-llm:rw"
+    - "${ROBOT_CODE}/yarp-devices-llm:/home/user/yarp-devices-llm:rw"
+    - "${HSP_CODE}/tour-guide-robot:/home/user/tour-guide-robot:rw"
   network_mode: host
   ipc: host
   pid: host
@@ -39,6 +40,7 @@ services:
           username: user
           uid: 1000
           gid: 1000
+          tour_branch: feature/new_app/llmTest
   llm-aux:
     image: elandini84/llm_gpt:aux
     build:
@@ -49,6 +51,7 @@ services:
           username: user
           uid: 1000
           gid: 1000
+          tour_branch: feature/new_app/llmTest
 
 # Containers
   llm-master-container:

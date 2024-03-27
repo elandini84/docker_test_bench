@@ -35,3 +35,11 @@ RUN groupmod -g ${gid} ${username} && \
 RUN apt-get update && apt-get install -y terminator
 
 USER ${username}
+
+ARG tour_branch
+
+RUN git clone https://github.com/hsp-iit/tour-guide-robot -b $tour_branch
+RUN cd tour-guide-robot && mkdir build && cd build && cmake ..
+
+ENV TOUR_GUIDE_ROBOT_SOURCE_DIR=/home/user1/tour-guide-robot
+ENV YARP_DATA_DIRS=${YARP_DATA_DIRS}:${TOUR_GUIDE_ROBOT_SOURCE_DIR}/build/share/tour_guide_robot
