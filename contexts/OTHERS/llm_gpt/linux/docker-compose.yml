@@ -63,5 +63,5 @@ services:
     image: elandini84/llm_gpt:aux
     <<: *base
     container_name: llm-aux-container
-    command: terminator -g /home/yarp-user/.config/terminator/config
+    command: bash -c "cd /home/user/yarp-devices-llm/build && sudo make -j8 install && cd /home/user/tour-guide-robot/build && cmake .. && terminator -g /home/user/.config/terminator/config"
 
