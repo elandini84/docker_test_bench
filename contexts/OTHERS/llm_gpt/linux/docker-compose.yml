@@ -40,7 +40,7 @@ services:
           username: user
           uid: 1000
           gid: 1000
-          tour_branch: feature/new_app/llmTest
+          tour_branch: iron
   llm-aux:
     image: elandini84/llm_gpt:aux
     build:
@@ -51,7 +51,7 @@ services:
           username: user
           uid: 1000
           gid: 1000
-          tour_branch: feature/new_app/llmTest
+          tour_branch: iron
 
 # Containers
   llm-master-container:
@@ -64,4 +64,24 @@ services:
     <<: *base
     container_name: llm-aux-container
     command: bash -c "cd /home/user/yarp-devices-llm/build && sudo make -j8 install && cd /home/user/tour-guide-robot/build && cmake .. && terminator -g /home/user/.config/terminator/config"
+  llm-master-self-container:
+    image: elandini84/llm_gpt:master
+    <<: *base
+    volumes:
+      - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
+      - "/etc/hosts:/etc/hosts"
+      - "${HOME}/.gitconfig:/home/user/.gitconfig"
+      - "${HOME}/.config/YARP:/home/user/.config/yarp:rw"
+    container_name: llm-aux-container
+    command: terminator -g /home/user/.config/terminator/config
+  llm-aux-self-container:
+    image: elandini84/llm_gpt:aux
+    <<: *base
+    volumes:
+      - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
+      - "/etc/hosts:/etc/hosts"
+      - "${HOME}/.gitconfig:/home/user/.gitconfig"
+      - "${HOME}/.config/YARP:/home/user/.config/yarp:rw"
+    container_name: llm-aux-container
+    command: terminator -g /home/user/.config/terminator/config
 
