@@ -118,3 +118,8 @@ services:
     <<: *nlp
     container_name: nlp-tools-v2-22-aux-container
     command: terminator -g /home/yarp-user/.config/terminator/config
+  nlp-tools-v2-22-aux-yarprun:
+    image: elandini84/nlp_tools:gccpp_v2.22_llm_aux
+    <<: *nlp
+    container_name: nlp-tools-v2-22-aux-container
+    command: yarprun --server /console-llm --log
