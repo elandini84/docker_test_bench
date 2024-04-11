@@ -3,13 +3,14 @@ FROM ${base_img}
 LABEL maintainer="Ettore Landini"
 
 ARG google_cloud_version
+ARG user_name
 
-USER yarp-user
-WORKDIR /home/yarp-user/
+USER ${user_name}
+WORKDIR /home/${user_name}/
 
 ### Packaging google-cloud-cpp instructions ############################################# START ####
 RUN mkdir Downloads
-WORKDIR /home/yarp-user/Downloads
+WORKDIR /home/${user_name}/Downloads
 RUN sudo apt-get update && \
     sudo apt-get --no-install-recommends install -y apt-transport-https apt-utils \
     automake build-essential cmake ca-certificates curl git \
@@ -91,10 +92,10 @@ RUN cd json && \
     sudo cmake --build cmake-out --target install -- -j ${NCPU:-4} && \
     sudo ldconfig
 
-WORKDIR /home/yarp-user
+WORKDIR /home/${user_name}
 RUN git clone https://github.com/googleapis/google-cloud-cpp.git
 
-ENV PREFIX="/home/yarp-user/google-cloud-cpp-installed"
+ENV PREFIX="/home/${user_name}/google-cloud-cpp-installed"
 #ENV PREFIX="/usr/local"
 RUN cd google-cloud-cpp && git checkout ${google_cloud_version} && \
     cmake -S . -B cmake-out \
@@ -106,15 +107,15 @@ RUN cd google-cloud-cpp && git checkout ${google_cloud_version} && \
     cmake --build cmake-out -- -j "$(nproc)" && \
 #    sudo cmake --build cmake-out --target install
     cmake --build cmake-out --target install
-ENV google_cloud_cpp_common_DIR=/home/yarp-user/google-cloud-cpp-installed/lib/cmake/google_cloud_cpp_common
-ENV google_cloud_cpp_googleapis_DIR=/home/yarp-user/google-cloud-cpp-installed/lib/cmake/google_cloud_cpp_googleapis
-ENV google_cloud_cpp_grpc_utils_DIR=/home/yarp-user/google-cloud-cpp-installed/lib/cmake/google_cloud_cpp_grpc_utils
-ENV google_cloud_cpp_texttospeech_DIR=/home/yarp-user/google-cloud-cpp-installed/lib/cmake/google_cloud_cpp_texttospeech
-ENV google_cloud_cpp_speech_DIR=/home/yarp-user/google-cloud-cpp-installed/lib/cmake/google_cloud_cpp_speech
-ENV google_cloud_cpp_dialogflow_cx_DIR=/home/yarp-user/google-cloud-cpp-installed/lib/cmake/google_cloud_cpp_dialogflow_cx
+ENV google_cloud_cpp_common_DIR=/home/${user_name}/google-cloud-cpp-installed/lib/cmake/google_cloud_cpp_common
+ENV google_cloud_cpp_googleapis_DIR=/home/${user_name}/google-cloud-cpp-installed/lib/cmake/google_cloud_cpp_googleapis
+ENV google_cloud_cpp_grpc_utils_DIR=/home/${user_name}/google-cloud-cpp-installed/lib/cmake/google_cloud_cpp_grpc_utils
+ENV google_cloud_cpp_texttospeech_DIR=/home/${user_name}/google-cloud-cpp-installed/lib/cmake/google_cloud_cpp_texttospeech
+ENV google_cloud_cpp_speech_DIR=/home/${user_name}/google-cloud-cpp-installed/lib/cmake/google_cloud_cpp_speech
+ENV google_cloud_cpp_dialogflow_cx_DIR=/home/${user_name}/google-cloud-cpp-installed/lib/cmake/google_cloud_cpp_dialogflow_cx
 ### Packaging google-cloud-cpp instructions ############################################### END ####
 
-ENV GOOGLE_APPLICATION_CREDENTIALS=/home/yarp-user/.config/google-credential/hsp_google.json
+ENV GOOGLE_APPLICATION_CREDENTIALS=/home/${user_name}/.config/google-credential/hsp_google.json
 ENV BUILD_SUFFIX=build
 
 RUN sudo apt install -y libsqlite3-0 libsqlite3-dev
@@ -124,4 +125,4 @@ RUN cd yarp/build && cmake ..
 RUN git clone https://github.com/robotology/yarp-devices-google-cloud && \
     cd yarp-devices-google-cloud && mkdir build && cd build && \
     cmake .. && make -j11
-ENV YARP_DATA_DIRS=${YARP_DATA_DIRS}:/home/yarp-user/robotology/yarp-devices-google-cloud/build/share/yarp:/home/yarp-user/robotology/yarp-devices-google-cloud/build/share/
+ENV YARP_DATA_DIRS=${YARP_DATA_DIRS}:/home/${user_name}/robotology/yarp-devices-google-cloud/build/share/yarp:/home/${user_name}/robotology/yarp-devices-google-cloud/build/share/
