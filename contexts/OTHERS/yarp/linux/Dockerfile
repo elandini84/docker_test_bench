@@ -6,13 +6,20 @@ ARG yarp_version
 
 # Non-interactive installation mode
 ENV DEBIAN_FRONTEND=noninteractive
-ENV DOCKER_UPDATED_ON=10_07_2023
+ENV DOCKER_UPDATED_ON=12_04_2024
 
 # Install essentials
-RUN apt-get update && apt-get install -y apt-utils software-properties-common sudo psmisc lsb-release protobuf-compiler libatlas-base-dev \
-    tmux nano geany vim wget curl build-essential git gitk cmake cmake-curses-gui autoconf xserver-xorg-video-dummy xserver-xorg-legacy \
-    net-tools terminator libjpeg-dev ffmpeg apt-transport-https ca-certificates gnupg libace-dev ycm-cmake-modules locales curl zip unzip tar \
-    python3-setuptools python3-pip iproute2 python3-tornado swig lsof iftop iputils-ping gdb bash-completion btop mlocate && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y apt-utils \
+    software-properties-common sudo psmisc lsb-release \
+    protobuf-compiler libatlas-base-dev tmux nano geany \
+    vim wget curl build-essential git gitk cmake cmake-curses-gui \
+    autoconf xserver-xorg-video-dummy xserver-xorg-legacy \
+    net-tools terminator libjpeg-dev ffmpeg apt-transport-https \
+    ca-certificates gnupg libace-dev ycm-cmake-modules locales \
+    curl zip unzip tar python3-setuptools python3-pip iproute2 \
+    python3-tornado swig lsof iftop iputils-ping gdb bash-completion \
+    btop mlocate && \
+    rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install numpy bpytop
 
@@ -27,7 +34,7 @@ RUN apt-get update && apt-get install -y libode8 libace-dev libboost-filesystem-
     liblapack-dev libmumps-dev qml-module-qtmultimedia qml-module-qtquick-dialogs qml-module-qtquick-controls \
     qml-module-qt-labs-settings libqcustomplot-dev qml-module-qt-labs-folderlistmodel libedit-dev \
     libeigen3-dev libjpeg-dev libsimbody-dev libxml2-dev libjs-underscore portaudio19-dev libgtkmm-2.4-dev \
-    libi2c-dev libv4l-dev
+    libi2c-dev libv4l-dev libsqlite3-0 libsqlite3-dev
 
 # Create user: yarp-user
 USER root

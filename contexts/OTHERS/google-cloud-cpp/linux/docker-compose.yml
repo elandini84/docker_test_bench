@@ -41,25 +41,6 @@ x-general: &general
   privileged: true
   security_opt:
     - apparmor:unconfined
-x-nlp: &nlp
-  environment:
-    - DISPLAY=${DISPLAY}
-    - XAUTHORITY=/home/yarp-user/.Xauthority
-    - QT_X11_NO_MITSHM=1
-    - DBUS_SESSION_BUS_ADDRESS=unix:path=/run/yarp-user/1000/bus
-    - LIBGL_ALWAYS_INDIRECT=0
-    - YARP_COLORED_OUTPUT=1
-  volumes:
-    - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
-    - "/etc/hosts:/etc/hosts"
-    - "${HOME}/.config/credentials/google-credentials/hsp_google.json:/home/user/.config/google-credential/hsp_google.json"
-    - "${HOME}/.config/credentials/azure-credentials/config.env:/home/user/.env/config.env"
-  network_mode: host
-  ipc: host
-  pid: host
-  privileged: true
-  security_opt:
-    - apparmor:unconfined
 
 services:
 
@@ -73,6 +54,7 @@ services:
           base_img: elandini84/yarp:ubuntu_22_04_master
           google_cloud_version: v2.22.x
           user_name: yarp-user
+          jval: 8
   gccpp-master-cuda-v2-22:
     image: elandini84/google_cloud_cpp:v2.22_yarp_cuda.11.7.1-cudnn8_master
     build:
@@ -82,15 +64,27 @@ services:
           base_img: elandini84/yarp:cuda.11.7.1-cudnn8_master
           google_cloud_version: v2.22.x
           user_name: yarp-user
-  nlp-tools-v2-22-aux:
-    image: elandini84/nlp_tools:gccpp_v2.22_llm_aux
+          jval: 8
+  gccpp-slow-master-ubuntu-v2-22:
+    image: elandini84/google_cloud_cpp:v2.22_yarp_ubuntu_22_04_master
     build:
       context: .
       dockerfile: Dockerfile
       args:
-          base_img: elandini84/llm_gpt:aux
+          base_img: elandini84/yarp:ubuntu_22_04_master
           google_cloud_version: v2.22.x
-          user_name: user
+          user_name: yarp-user
+          jval: 4
+  gccpp-slow-master-cuda-v2-22:
+    image: elandini84/google_cloud_cpp:v2.22_yarp_cuda.11.7.1-cudnn8_master
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+          base_img: elandini84/yarp:cuda.11.7.1-cudnn8_master
+          google_cloud_version: v2.22.x
+          user_name: yarp-user
+          jval: 4
 
 # Containers
   gccpp-master-ubuntu-v2-22-container:
@@ -113,13 +107,3 @@ services:
     <<: *general
     container_name: gccpp-master-ubuntu-v2-22-container
     command: terminator -g /home/yarp-user/.config/terminator/config
-  nlp-tools-v2-22-aux-container:
-    image: elandini84/nlp_tools:gccpp_v2.22_llm_aux
-    <<: *nlp
-    container_name: nlp-tools-v2-22-aux-container
-    command: terminator -g /home/yarp-user/.config/terminator/config
-  nlp-tools-v2-22-aux-yarprun:
-    image: elandini84/nlp_tools:gccpp_v2.22_llm_aux
-    <<: *nlp
-    container_name: nlp-tools-v2-22-aux-container
-    command: bash -c "yarp conf 192.168.100.10 10000 && yarprun --server /console-llm --log"
