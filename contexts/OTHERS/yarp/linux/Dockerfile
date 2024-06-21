@@ -45,7 +45,7 @@ RUN useradd -l -u 33334 -G sudo -md /home/yarp-user -s /bin/bash -p yarp-user ya
 
 # Set ENV
 USER yarp-user
-RUN mkdir ${robot_code}
+RUN sudo mkdir ${robot_code}
 ENV robotology_install_user yarp-user
 ENV yarp_user_home /home/$robotology_install_user
 ENV robotology_install_folder ${robot_code}

@@ -58,3 +58,13 @@ services:
     <<: *nlp
     container_name: nlp-tools-v2-22-aux-container
     command: bash -c "yarp conf 192.168.100.10 10000 && yarprun --server /console-llm --log"
+  nlp-tools-v2-22-master-container:
+    image: elandini84/nlp_tools:gccpp_v2.22_llm_master
+    <<: *nlp
+    container_name: nlp-tools-v2-22-master-container
+    command: terminator -g /home/yarp-user/.config/terminator/config
+  nlp-tools-v2-22-master-yarprun:
+    image: elandini84/nlp_tools:gccpp_v2.22_llm_master
+    <<: *nlp
+    container_name: nlp-tools-v2-22-master-container
+    command: bash -c "yarp conf 192.168.100.10 10000 && yarprun --server /console-llm --log"
