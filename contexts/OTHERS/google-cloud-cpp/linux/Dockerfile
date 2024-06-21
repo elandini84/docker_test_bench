@@ -3,7 +3,13 @@ FROM ${base_img}
 LABEL maintainer="Ettore Landini"
 
 ARG google_cloud_version
+ARG grcp_version
+ARG google_cloud_version
+ARG open_telemetry_version
+ARG nlohmann_json_version
+ARG crc32c_version
 ARG user_name
+ARG robot_code
 
 USER ${user_name}
 WORKDIR /home/${user_name}/
@@ -46,7 +52,7 @@ RUN cd protobuf && \
 
 RUN mkdir -p grpc
 RUN cd grpc && \
-    curl -fsSL https://github.com/grpc/grpc/archive/v1.60.0.tar.gz | \
+    curl -fsSL https://github.com/grpc/grpc/archive/${grcp_version}.tar.gz | \
         tar -xzf - --strip-components=1 && \
     cmake \
         -DCMAKE_BUILD_TYPE=Release \
@@ -66,7 +72,7 @@ RUN cd grpc && \
 
 RUN mkdir -p crc32c
 RUN cd crc32c && \
-    curl -fsSL https://github.com/google/crc32c/archive/1.1.2.tar.gz | \
+    curl -fsSL https://github.com/google/crc32c/archive/${crc32c_version}.tar.gz | \
     tar -xzf - --strip-components=1 && \
     cmake \
         -DCMAKE_BUILD_TYPE=Release \
@@ -81,7 +87,7 @@ RUN cd crc32c && \
 
 RUN mkdir -p json
 RUN cd json && \
-    curl -fsSL https://github.com/nlohmann/json/archive/v3.11.3.tar.gz | \
+    curl -fsSL https://github.com/nlohmann/json/archive/${nlohmann_json_version}.tar.gz | \
     tar -xzf - --strip-components=1 && \
     cmake \
       -DCMAKE_BUILD_TYPE=Release \
@@ -92,7 +98,7 @@ RUN cd json && \
     sudo cmake --build cmake-out --target install -- -j ${NCPU:-4} && \
     sudo ldconfig
 RUN mkdir -p opentelemetry-cpp && cd opentelemetry-cpp && \
-    curl -fsSL https://github.com/open-telemetry/opentelemetry-cpp/archive/v1.13.0.tar.gz | \
+    curl -fsSL https://github.com/open-telemetry/opentelemetry-cpp/archive/${open_telemetry_version}.tar.gz | \
         tar -xzf - --strip-components=1 && \
         cmake \
             -DCMAKE_BUILD_TYPE=Release \
@@ -107,12 +113,11 @@ RUN mkdir -p opentelemetry-cpp && cd opentelemetry-cpp && \
     sudo ldconfig
 
 WORKDIR /home/${user_name}
-RUN git clone https://github.com/googleapis/google-cloud-cpp.git
 ARG jval
-
 ENV PREFIX="/home/${user_name}/google-cloud-cpp-installed"
-#ENV PREFIX="/usr/local"
-RUN cd google-cloud-cpp && git checkout ${google_cloud_version} && \
+RUN mkdir google-cloud-cpp && cd google-cloud-cpp && \
+    curl -fsSL https://github.com/googleapis/google-cloud-cpp/archive/refs/tags/${google_cloud_version}.tar.gz | \
+    tar -xzf - --strip-components=1 && \
     cmake -S . -B cmake-out \
         -DCMAKE_INSTALL_PREFIX="${PREFIX}" \
         -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
@@ -123,6 +128,22 @@ RUN cd google-cloud-cpp && git checkout ${google_cloud_version} && \
         cmake --build cmake-out -- -j "${jval}" && \
 #        sudo cmake --build cmake-out --target install
         cmake --build cmake-out --target install
+
+# RUN git clone https://github.com/googleapis/google-cloud-cpp.git
+
+# ENV PREFIX="/home/${user_name}/google-cloud-cpp-installed"
+# #ENV PREFIX="/usr/local"
+# RUN cd google-cloud-cpp && git checkout ${google_cloud_version} && \
+#     cmake -S . -B cmake-out \
+#         -DCMAKE_INSTALL_PREFIX="${PREFIX}" \
+#         -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+#         -DBUILD_TESTING=OFF \
+#         -DGOOGLE_CLOUD_CPP_ENABLE_EXAMPLES=OFF \
+# #        -DGOOGLE_CLOUD_CPP_ENABLE=__ga_libraries__
+#         -DGOOGLE_CLOUD_CPP_ENABLE=__ga_libraries__ && \
+#         cmake --build cmake-out -- -j "${jval}" && \
+# #        sudo cmake --build cmake-out --target install
+#         cmake --build cmake-out --target install
 
 ENV google_cloud_cpp_common_DIR=/home/${user_name}/google-cloud-cpp-installed/lib/cmake/google_cloud_cpp_common
 ENV google_cloud_cpp_googleapis_DIR=/home/${user_name}/google-cloud-cpp-installed/lib/cmake/google_cloud_cpp_googleapis
@@ -135,8 +156,8 @@ ENV google_cloud_cpp_dialogflow_cx_DIR=/home/${user_name}/google-cloud-cpp-insta
 ENV GOOGLE_APPLICATION_CREDENTIALS=/home/${user_name}/.config/google-credential/hsp_google.json
 ENV BUILD_SUFFIX=build
 
-WORKDIR /home/${user_name}/robotology
+WORKDIR ${robot_code}
 RUN git clone https://github.com/robotology/yarp-devices-google-cloud && \
    cd yarp-devices-google-cloud && mkdir build && cd build && \
    cmake .. && make -j11
-ENV YARP_DATA_DIRS=${YARP_DATA_DIRS}:/home/${user_name}/robotology/yarp-devices-google-cloud/build/share/yarp:/home/${user_name}/robotology/yarp-devices-google-cloud/build/share/
+ENV YARP_DATA_DIRS=${YARP_DATA_DIRS}:${robot_code}/yarp-devices-google-cloud/build/share/yarp:${robot_code}/yarp-devices-google-cloud/build/share/
