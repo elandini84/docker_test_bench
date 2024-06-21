@@ -3,6 +3,7 @@ FROM $base_img
 LABEL maintainer="Ettore Landini"
 
 ARG yarp_version
+ARG robot_code
 
 # Non-interactive installation mode
 ENV DEBIAN_FRONTEND=noninteractive
@@ -44,10 +45,11 @@ RUN useradd -l -u 33334 -G sudo -md /home/yarp-user -s /bin/bash -p yarp-user ya
 
 # Set ENV
 USER yarp-user
-RUN mkdir /home/yarp-user/robotology
+RUN mkdir ${robot_code}
 ENV robotology_install_user yarp-user
 ENV yarp_user_home /home/$robotology_install_user
-ENV robotology_install_folder $yarp_user_home/robotology
+ENV robotology_install_folder ${robot_code}
+RUN sudo chown -R ${robotology_install_user}:${robotology_install_user} ${robotology_install_folder}
 
 
 # FOLDER ACCESS ###############################################################################
@@ -83,7 +85,7 @@ RUN cd ycm && mkdir build && cd build && \
     cmake .. \
     -DCMAKE_BUILD_TYPE=Release && \
     make -j11
-ENV YCM_DIR=/home/yarp-user/robotology/ycm/build
+ENV YCM_DIR=${robot_code}/ycm/build
 
 # Build YARP
 USER $robotology_install_user
@@ -137,7 +139,7 @@ ENV YARP_DATA_DIRS=$YARP_DIR/share/yarp
 ENV LD_LIBRARY_PATH=$robotology_install_folder/yarp/build/lib/yarp/
 ENV YARP_COLORED_OUTPUT=1
 ENV QT_X11_NO_MITSHM=1
-ENV PYTHONPATH=$PYTHONPATH:/home/yarp-user/robotology/yarp/bindings/build/lib/python3/
+ENV PYTHONPATH=$PYTHONPATH:${YARP_ROOT}/bindings/build/lib/python3/
 
 # Manage yarp port
 EXPOSE 10000/tcp 10000/udp

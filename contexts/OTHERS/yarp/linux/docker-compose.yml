@@ -33,6 +33,7 @@ services:
           gid: 1000
           base_img: ubuntu:22.04
           yarp_version: master
+          robot_code: /usr/local/src/robot
   yarp-master-cuda:
     image: elandini84/yarp:cuda.11.7.1-cudnn8_master
     build:
@@ -43,6 +44,7 @@ services:
           uid: 1000
           gid: 1000
           base_img: nvidia/cuda:11.7.1-cudnn8-devel-ubuntu22.04
+          robot_code: /usr/local/src/robot
           yarp_version: master
 
 # Containers
