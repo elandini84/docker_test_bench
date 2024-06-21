@@ -4,6 +4,7 @@ LABEL maintainer="Ettore Landini"
 
 ARG user_name
 ARG robot_code
+ARG llm_branch
 
 WORKDIR /home/${user_name}/Downloads
 # Install openai c++ dependencies
@@ -30,7 +31,7 @@ RUN echo "set -a" >> /home/${user_name}/.bashrc && \
 
 # Install yarpGPT
 WORKDIR ${robot_code}
-RUN git clone https://github.com/robotology/yarp-devices-llm -b feat/aux_module && \
+RUN git clone https://github.com/robotology/yarp-devices-llm -b ${llm_branch} && \
     cd yarp-devices-llm && mkdir build && \
     cmake -B build -S . \
     -DCMAKE_TOOLCHAIN_FILE=/home/${user_name}/Downloads/vcpkg/scripts/buildsystems/vcpkg.cmake \

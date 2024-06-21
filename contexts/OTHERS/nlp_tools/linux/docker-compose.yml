@@ -32,6 +32,18 @@ services:
       args:
           base_img: elandini84/google_cloud_cpp:v2.22_yarp_ubuntu_22_04_master
           tour_branch: iron
+          llm_branch: feat/aux_module
+          robot_code: /usr/local/src/robot
+          user_name: yarp-user
+  nlp-tools-v2-22-master:
+    image: elandini84/nlp_tools:gccpp_v2.22_llm_master
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+          base_img: elandini84/google_cloud_cpp:v2.22_yarp_ubuntu_22_04_master
+          tour_branch: iron
+          llm_branch: master
           robot_code: /usr/local/src/robot
           user_name: yarp-user
 
