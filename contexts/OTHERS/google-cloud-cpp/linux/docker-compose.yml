@@ -34,7 +34,7 @@ x-general: &general
   volumes:
     - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
     - "/etc/hosts:/etc/hosts"
-    - "${HOME}/.config/credentials/google-credentials/hsp_google.json:/home/user/.config/google-credential/hsp_google.json"
+    - "${HOME}/.config/credentials/google-credentials/hsp_google.json:/home/yarp-user/.config/google-credential/hsp_google.json"
   network_mode: host
   ipc: host
   pid: host
