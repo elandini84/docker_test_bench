@@ -1,0 +1,27 @@
+ARG base_img
+FROM ${base_img}
+LABEL maintainer="Ettore Landini"
+
+ARG google_cloud_version
+ARG user_name
+
+USER ${user_name}
+WORKDIR /home/${user_name}/
+
+### Install google from vcpkg ############################################# START ####
+RUN mkdir Downloads
+WORKDIR /home/${user_name}/Downloads
+RUN git clone https://github.com/Microsoft/vcpkg.git && \
+    cd vcpkg && git checkout ${google_cloud_version} && ./bootstrap-vcpkg.sh -disableMetrics && \
+    ./vcpkg install --clean-after-build google-cloud-cpp[texttospeech] google-cloud-cpp[speech] google-cloud-cpp[dialogflow-cx]
+ENV VCPKG_ROOT=/home/${user_name}/Downloads/vcpkg
+### Packaging google-cloud-cpp instructions ############################################### END ####
+
+ENV GOOGLE_APPLICATION_CREDENTIALS=/home/${user_name}/.config/google-credential/hsp_google.json
+ENV BUILD_SUFFIX=build
+
+WORKDIR ${robot_code}
+RUN git clone https://github.com/robotology/yarp-devices-google-cloud && \
+   cd yarp-devices-google-cloud && cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=/home/yarp-user/Downloads/vcpkg/scripts/buildsystems/vcpkg.cmake && \
+   cmake --build build
+ENV YARP_DATA_DIRS=${YARP_DATA_DIRS}:${robot_code}/yarp-devices-google-cloud/build/share/yarp:${robot_code}/yarp-devices-google-cloud/build/share/
