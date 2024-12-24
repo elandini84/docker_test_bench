@@ -45,7 +45,7 @@ x-general: &general
 services:
 
 # Images
-  gccp-master-ubuntu-vcpkg-2-28:
+  gccpp-master-ubuntu-vcpkg-2-28:
     image: elandini84/google_cloud_cpp:vcpkg2.28_yarp_ubuntu_22_04_master
     build:
       context: .
@@ -55,7 +55,7 @@ services:
           robot_code: /usr/local/src/robot
           google_cloud_version: a89dc1d0762103c132decd4eb57e8c014b01455f
           user_name: yarp-user
-  gccp-master-cuda-vcpkg-2-28:
+  gccpp-master-cuda-vcpkg-2-28:
     image: elandini84/google_cloud_cpp:vcpkg2.28_yarp_cuda.11.7.1-cudnn8_master
     build:
       context: .
