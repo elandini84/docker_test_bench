@@ -23,7 +23,7 @@ services:
 
 # Images
   yarp-master-ubuntu:
-    image: elandini84/yarp:ubuntu_22_04_master
+    image: elandini84/yarp:ubuntu_24_04_master
     build:
       context: .
       dockerfile: Dockerfile
@@ -31,11 +31,11 @@ services:
           username: yarp-user
           uid: 1000
           gid: 1000
-          base_img: ubuntu:22.04
+          base_img: ubuntu:24.04
           yarp_version: master
           robot_code: /usr/local/src/robot
-  yarp-master-cuda:
-    image: elandini84/yarp:cuda.11.7.1-cudnn8_master
+  yarp-3-12-ubuntu:
+    image: elandini84/yarp:ubuntu_24.04_3.12
     build:
       context: .
       dockerfile: Dockerfile
@@ -43,13 +43,19 @@ services:
           username: yarp-user
           uid: 1000
           gid: 1000
-          base_img: nvidia/cuda:11.7.1-cudnn8-devel-ubuntu22.04
+          base_img: ubuntu:24.04
+          yarp_version: yarp-3.12
           robot_code: /usr/local/src/robot
-          yarp_version: master
 
 # Containers
   yarp-master-ubuntu-container:
-    image: elandini84/yarp:ubuntu_22_04_master
+    image: elandini84/yarp:ubuntu_24_04_master
     <<: *base
     container_name: yarp-master-ubuntu-container
     command: terminator -g /home/yarp-user/.config/terminator/config
+  yarp-3-12-ubuntu-container:
+    image: elandini84/yarp:ubuntu_24.04_3.12
+    <<: *base
+    container_name: yarp-master-ubuntu-container
+    command: terminator -g /home/yarp-user/.config/terminator/config
+

@@ -24,58 +24,51 @@ x-nlp: &nlp
 services:
 
 # Images
-  nlp-tools-v2-22-aux:
-    image: elandini84/nlp_tools:gccpp_v2.22_llm_aux
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-          base_img: elandini84/google_cloud_cpp:v2.22_yarp_ubuntu_22_04_master
-          tour_branch: iron
-          llm_branch: feat/aux_module
-          robot_code: /usr/local/src/robot
-          user_name: yarp-user
-  nlp-tools-v2-22-master:
-    image: elandini84/nlp_tools:gccpp_v2.22_llm_master
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-          base_img: elandini84/google_cloud_cpp:v2.22_yarp_ubuntu_22_04_master
-          tour_branch: iron
-          llm_branch: master
-          robot_code: /usr/local/src/robot
-          user_name: yarp-user
   nlp-tools-v2-33-master:
     image: elandini84/nlp_tools:gccpp_v2.33_llm_master
     build:
       context: .
       dockerfile: Dockerfile
       args:
-          base_img: elandini84/google_cloud_cpp:v2.33_yarp_ubuntu_24_04_master
+          base_img: elandini84/google_cloud_cpp:vcpkg2.33_yarp_ubuntu_24_04_master
           tour_branch: jazzy
           llm_branch: master
           robot_code: /usr/local/src/robot
           user_name: yarp-user
+  nlp-tools-talk-ub24-v2-33-master:
+    image: elandini84/r1_talk:ub24.04_vcpkg_gccpp_v2.33
+    build:
+      context: .
+      dockerfile: Dockerfile_talk
+      args:
+          base_img: ubuntu:24.04
+          tour_branch: jazzy
+          llm_branch: master
+          robot_code: /usr/local/src/robot
+          user_name: yarp-user
+          yarp_version: master
+          uid: 1000
+          gid: 1000
+          google_cloud_version: tags/2025.01.13
 
 # Containers
-  nlp-tools-v2-22-aux-container:
-    image: elandini84/nlp_tools:gccpp_v2.22_llm_aux
+  nlp-tools-v2-33-master-container:
+    image: elandini84/nlp_tools:gccpp_v2.33_llm_master
     <<: *nlp
-    container_name: nlp-tools-v2-22-aux-container
+    container_name: nlp-tools-v2-33-master-container
     command: terminator -g /home/yarp-user/.config/terminator/config
-  nlp-tools-v2-22-aux-yarprun:
-    image: elandini84/nlp_tools:gccpp_v2.22_llm_aux
+  nlp-tools-v2-33-master-yarprun:
+    image: elandini84/nlp_tools:gccpp_v2.33_llm_master
     <<: *nlp
-    container_name: nlp-tools-v2-22-aux-container
+    container_name: nlp-tools-v2-33-master-container
     command: bash -c "yarp conf 192.168.100.10 10000 && yarprun --server /console-llm --log"
-  nlp-tools-v2-22-master-container:
-    image: elandini84/nlp_tools:gccpp_v2.22_llm_master
+  nlp-tools-talk-ub24-v2-33-master-container:
+    image: elandini84/r1_talk:ub24.04_vcpkg_gccpp_v2.33
     <<: *nlp
-    container_name: nlp-tools-v2-22-master-container
+    container_name: nlp-tools-talk-ub24-v2-33-master-container
     command: terminator -g /home/yarp-user/.config/terminator/config
-  nlp-tools-v2-22-master-yarprun:
-    image: elandini84/nlp_tools:gccpp_v2.22_llm_master
+  nlp-tools-talk-ub24-v2-33-master-yarprun:
+    image: elandini84/r1_talk:ub24.04_vcpkg_gccpp_v2.33
     <<: *nlp
-    container_name: nlp-tools-v2-22-master-container
+    container_name: nlp-tools-talk-ub24-v2-33-master-yarprun
     command: bash -c "yarp conf 192.168.100.10 10000 && yarprun --server /console-llm --log"

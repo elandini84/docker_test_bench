@@ -45,17 +45,27 @@ x-general: &general
 services:
 
 # Images
-  gccpp-master-ubuntu-vcpkg-2-28:
-    image: elandini84/google_cloud_cpp:vcpkg2.28_yarp_ubuntu_22_04_master
+  gccpp-master-ubuntu-vcpkg-2-33:
+    image: elandini84/google_cloud_cpp:vcpkg2.33_yarp_ubuntu_22_04_master
     build:
       context: .
       dockerfile: Dockerfile_vcpkg
       args:
           base_img: elandini84/yarp:ubuntu_22_04_master
           robot_code: /usr/local/src/robot
-          google_cloud_version: a89dc1d0762103c132decd4eb57e8c014b01455f
+          google_cloud_version: tags/2025.01.13
           user_name: yarp-user
-  gccpp-master-cuda-vcpkg-2-28:
+  gccpp-master-ub24-vcpkg-2-33:
+    image: elandini84/google_cloud_cpp:vcpkg2.33_yarp_ubuntu_24_04_master
+    build:
+      context: .
+      dockerfile: Dockerfile_vcpkg
+      args:
+          base_img: elandini84/yarp:ubuntu_24_04_master
+          robot_code: /usr/local/src/robot
+          google_cloud_version: tags/2025.01.13
+          user_name: yarp-user
+  gccpp-master-cuda-vcpkg-2-33:
     image: elandini84/google_cloud_cpp:vcpkg2.28_yarp_cuda.11.7.1-cudnn8_master
     build:
       context: .
@@ -63,7 +73,7 @@ services:
       args:
           base_img: elandini84/yarp:ubuntu_22_04_master
           robot_code: /usr/local/src/robot
-          google_cloud_version: a89dc1d0762103c132decd4eb57e8c014b01455f
+          google_cloud_version: tags/2025.01.13
           user_name: yarp-user
   gccpp-master-ubuntu-v2-22:
     image: elandini84/google_cloud_cpp:v2.22_yarp_ubuntu_22_04_master

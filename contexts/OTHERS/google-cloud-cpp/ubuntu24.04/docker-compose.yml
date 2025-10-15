@@ -1,0 +1,73 @@
+version: "3.7"
+
+x-base: &base
+  environment:
+    - DISPLAY=${DISPLAY}
+    - XAUTHORITY=/home/yarp-user/.Xauthority
+    - QT_X11_NO_MITSHM=1
+    - DBUS_SESSION_BUS_ADDRESS=unix:path=/run/yarp-user/1000/bus
+    - LIBGL_ALWAYS_INDIRECT=0
+    - YARP_COLORED_OUTPUT=1
+  volumes:
+    - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
+    - "/etc/hosts:/etc/hosts"
+    - "${HOME}/.gitconfig:/home/yarp-user/.gitconfig"
+    - "${ROBOT_CODE}/yarp-devices-google-cloud:/home/yarp-user/robotology/yarp-devices-google-cloud:rw"
+    - "${ROBOT_CODE}/yarp:/home/yarp-user/robotology/yarp:rw"
+    - "${ROBOT_CODE}/yarp/build_docker:/home/yarp-user/robotology/yarp/build:rw"
+    - "${SECRETS_DATA}/HSP-Speech-Interaction-DEV/hsp-speech-test/hsp-speech-interaction-dev-ad51a35ee0ea.json:/home/yarp-user/.config/google-credential/hsp_google.json"
+    - "${HOME}/userDump/robotinterface:/home/yarp-user/robotinterface:rw"
+  network_mode: host
+  ipc: host
+  pid: host
+  privileged: true
+  security_opt:
+    - apparmor:unconfined
+x-general: &general
+  environment:
+    - DISPLAY=${DISPLAY}
+    - XAUTHORITY=/home/yarp-user/.Xauthority
+    - QT_X11_NO_MITSHM=1
+    - DBUS_SESSION_BUS_ADDRESS=unix:path=/run/yarp-user/1000/bus
+    - LIBGL_ALWAYS_INDIRECT=0
+    - YARP_COLORED_OUTPUT=1
+  volumes:
+    - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
+    - "/etc/hosts:/etc/hosts"
+    - "${HOME}/.config/credentials/google-credentials/hsp_google.json:/home/yarp-user/.config/google-credential/hsp_google.json"
+  network_mode: host
+  ipc: host
+  pid: host
+  privileged: true
+  security_opt:
+    - apparmor:unconfined
+
+services:
+
+# Images
+  gccpp-master-ub24-vcpkg-2-33:
+    image: elandini84/google_cloud_cpp:vcpkg2.33_yarp_ubuntu_24_04_master
+    build:
+      context: .
+      dockerfile: Dockerfile_vcpkg
+      args:
+          base_img: elandini84/yarp:ubuntu_24_04_master
+          robot_code: /usr/local/src/robot
+          google_cloud_version: tags/2025.01.13
+          user_name: yarp-user
+# Containers
+  gccpp-master-ub24-vcpkg-2-33-container:
+    image: elandini84/google_cloud_cpp:vcpkg2.33_yarp_ubuntu_24_04_master
+    <<: *base
+    container_name: gccpp-master-ub24-vcpkg-2-33-container
+    command: terminator -g /home/yarp-user/.config/terminator/config
+  gccpp-master-ub24-vcpkg-2-33-valgrind:
+    image: elandini84/google_cloud_cpp:vcpkg2.33_yarp_ubuntu_24_04_master
+    <<: *base
+    container_name: gccpp-master-ub24-vcpkg-2-33-valgrind-container
+    command: bash -c "sudo apt install -y valgrind ninja-build && terminator -g /home/yarp-user/.config/terminator/config"
+  gccpp-master-ub24-vcpkg-2-33-general-container:
+    image: elandini84/google_cloud_cpp:vcpkg2.33_yarp_ubuntu_24_04_master
+    <<: *general
+    container_name: gccpp-master-ub24-vcpkg-2-33-container
+    command: terminator -g /home/yarp-user/.config/terminator/config

@@ -1,9 +1,9 @@
-ARG base_img
+ARG base_img="ubuntu:24.04"
 FROM $base_img
 LABEL maintainer="Ettore Landini"
 
-ARG yarp_version
-ARG robot_code
+ARG yarp_version="yarp-3.12"
+ARG robot_code="/usr/local/src/robot"
 
 # Non-interactive installation mode
 ENV DEBIAN_FRONTEND=noninteractive
@@ -19,10 +19,10 @@ RUN apt-get update && apt-get install -y apt-utils \
     ca-certificates gnupg libace-dev ycm-cmake-modules locales \
     curl zip unzip tar python3-setuptools python3-pip iproute2 \
     python3-tornado swig lsof iftop iputils-ping gdb bash-completion \
-    btop mlocate && \
+    btop && \
     rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install numpy bpytop
+RUN pip3 install --break-system-packages numpy bpytop
 
 RUN sed -i 's/allowed_users=console/allowed_users=anybody/' /etc/X11/Xwrapper.config
 COPY ./common/xorg.conf /etc/X11/xorg.conf
@@ -122,10 +122,19 @@ RUN cd yarp && mkdir build && cd build && \
 ENV YARP_ROOT=$robotology_install_folder/yarp
 ENV YARP_DIR=$robotology_install_folder/yarp/build
 
+# SWIG 4.21
+WORKDIR ${yarp_user_home}
+RUN sudo apt-get purge -y swig && mkdir Downloads && cd Downloads &&\
+    wget -nv https://github.com/robotology/robotology-vcpkg-ports/releases/download/storage/swig_4_2_1_ubuntu_24_04.zip && \
+    unzip -q swig_4_2_1_ubuntu_24_04.zip && \
+    sudo mv swig_4_2_1_ubuntu_24_04_install/bin/* /usr/bin && \
+    sudo mv swig_4_2_1_ubuntu_24_04_install/share/swig /usr/share
+
 # YARP bindings
-USER $robotology_install_user
-WORKDIR $robotology_install_folder
-RUN cd yarp && cd bindings &&  mkdir build && cd build && cmake .. -DCREATE_PYTHON=ON && make -j11
+USER ${robotology_install_user}
+WORKDIR ${robotology_install_folder}
+RUN cd yarp && cd bindings &&  mkdir build && cd build && \
+    cmake .. -DCREATE_PYTHON=ON -DSWIG_EXECUTABLE=/usr/bin/swig -DSWIG_DIR=/usr/share/swig/4.2.1 && make -j11
 
 # Install YARP completion
 RUN sudo ln -s /usr/local/share/bash-completion/completions/yarp /usr/share/bash-completion/completions
